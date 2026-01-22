@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MarginMaster Pro - Simulador de Rentabilidad para emprendedores peruanos">
+    <title>MarginMaster Pro - Inteligencia de Rentabilidad</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Estilos Personalizados -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header Principal -->
+    <header class="header-container">
+        <div class="max-w-7xl mx-auto">
+            <div class="glass rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="text-center md:text-left">
+                    <h1 class="text-3xl md:text-5xl font-black text-white mb-2 logo-text">
+                        💰 MarginMaster <span class="text-amber-500">Pro</span>
+                    </h1>
+                    <p class="text-slate-400 text-sm md:text-base">Inteligencia de Rentabilidad para el Mercado Peruano 🇵🇪</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-xs md:text-sm text-slate-400">Tipo de Cambio USD → PEN</div>
+                    <div class="text-2xl md:text-3xl font-bold text-amber-500 pulse-gold" id="tipoCambio">S/ 3.75</div>
+                    <div class="text-xs text-slate-500" id="fechaTipoCambio">Actualizando...</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Principal -->
+    <main class="main-container">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- ========================================
+                 COLUMNA IZQUIERDA: CONFIGURACIÓN
+            ========================================= -->
+            <aside class="lg:col-span-1 space-y-6">
+                
+                <!-- 📦 ESCANDALLO PRO -->
+                <section class="glass-card rounded-3xl p-6 slide-in">
+                    <h2 class="section-title">
+                        <span class="text-2xl mr-2">📦</span> Escandallo Pro
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <!-- Costo de Compra -->
+                        <div class="input-group">
+                            <label for="costoCompra" class="input-label">Costo de Compra (S/)</label>
+                            <input 
+                                type="number" 
+                                id="costoCompra" 
+                                class="input-glass" 
+                                value="50.00" 
+                                step="0.01" 
+                                min="0"
+                                placeholder="0.00">
+                        </div>
+                        
+                        <!-- Packaging -->
+                        <div class="input-group">
+                            <label for="packaging" class="input-label">Packaging (S/)</label>
+                            <input 
+                                type="number" 
+                                id="packaging" 
+                                class="input-glass" 
+                                value="5.00" 
+                                step="0.01" 
+                                min="0"
+                                placeholder="0.00">
+                        </div>
+                        
+                        <!-- Envío -->
+                        <div class="input-group">
+                            <label for="envio" class="input-label">Envío (S/)</label>
+                            <input 
+                                type="number" 
+                                id="envio" 
+                                class="input-glass" 
+                                value="8.00" 
+                                step="0.01" 
+                                min="0"
+                                placeholder="0.00">
+                        </div>
+                        
+                        <!-- Merma % -->
+                        <div class="input-group">
+                            <label for="merma" class="input-label">Merma (%)</label>
+                            <input 
+                                type="number" 
+                                id="merma" 
+                                class="input-glass" 
+                                value="5" 
+                                step="0.1" 
+                                min="0" 
+                                max="100"
+                                placeholder="5">
+                        </div>
+
+                        <!-- Total Escandallo -->
+                        <div class="result-box border-t border-amber-500/30 pt-4 mt-4">
+                            <div class="text-sm text-slate-400 mb-1">💎 Costo Total Unitario</div>
+                            <div class="text-3xl font-black text-amber-500" id="costoTotal">S/ 0.00</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 💳 MOTOR DE PASARELAS -->
+                <section class="glass-card rounded-3xl p-6 slide-in">
+                    <h2 class="section-title">
+                        <span class="text-2xl mr-2">💳</span> Pasarela de Pago
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <select id="pasarela" class="input-glass">
+                            <option value="efectivo">💵 Efectivo (0%)</option>
+                            <option value="yape">📱 Yape Personal (0%)</option>
+                            <option value="yape-empresa">📱 Yape Empresa (2.95%)</option>
+                            <option value="plin">📱 Plin Empresa (2.95%)</option>
+                            <option value="izipay">💳 Izipay (3.44% + IGV)</option>
+                            <option value="niubiz">💳 Niubiz (3.44% + IGV)</option>
+                            <option value="culqi">💳 Culqi (3.99% + S/1 + IGV)</option>
+                            <option value="mercadopago">💳 Mercado Pago (3.99% + S/1 + IGV)</option>
+                        </select>
+
+                        <!-- Desglose Comisión -->
+                        <div class="result-box bg-slate-900/50 rounded-xl p-4">
+                            <div class="text-xs text-slate-400 mb-1">Mordisco de la Pasarela</div>
+                            <div class="text-2xl font-bold text-red-400" id="comisionPasarela">S/ 0.00</div>
+                            <div class="text-xs text-slate-500 mt-1" id="detallePasarela">0% del precio</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 🏛️ CALCULADORA SUNAT -->
+                <section class="glass-card rounded-3xl p-6 slide-in">
+                    <h2 class="section-title">
+                        <span class="text-2xl mr-2">🏛️</span> SUNAT 2026
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <select id="regimen" class="input-glass">
+                            <option value="rus">Nuevo RUS (1.5%)</option>
+                            <option value="rer">RER (1.5% + IGV 18%)</option>
+                            <option value="mype">MYPE (10% + IGV 18%)</option>
+                            <option value="general">Régimen General (29.5% + IGV 18%)</option>
+                        </select>
+
+                        <!-- Desglose SUNAT -->
+                        <div class="space-y-3">
+                            <div class="result-box bg-slate-900/50 rounded-xl p-3">
+                                <div class="text-xs text-slate-400">IGV (18%)</div>
+                                <div class="text-lg font-bold text-orange-400" id="igv">S/ 0.00</div>
+                            </div>
+                            <div class="result-box bg-slate-900/50 rounded-xl p-3">
+                                <div class="text-xs text-slate-400">Impuesto a la Renta</div>
+                                <div class="text-lg font-bold text-orange-400" id="renta">S/ 0.00</div>
+                            </div>
+                            <div class="result-box bg-amber-900/30 rounded-xl p-3 border border-amber-500/30">
+                                <div class="text-xs text-amber-300">Total Impuestos</div>
+                                <div class="text-xl font-bold text-amber-500" id="totalImpuestos">S/ 0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 🌉 THE BRIDGE - SUELDOPRO INTEGRATION -->
+                <section class="glass-card rounded-3xl p-6 slide-in border-2 border-amber-500/50 shadow-2xl">
+                    <h2 class="section-title">
+                        <span class="text-2xl mr-2">🌉</span> The Bridge
+                    </h2>
+                    <p class="text-xs text-slate-400 mb-4">Conectado con SueldoPro</p>
+                    
+                    <div class="space-y-4">
+                        <!-- Input Sueldo Deseado -->
+                        <div class="input-group">
+                            <label for="sueldoDeseado" class="input-label">💰 Sueldo Deseado Mensual (S/)</label>
+                            <input 
+                                type="number" 
+                                id="sueldoDeseado" 
+                                class="input-glass text-xl font-bold" 
+                                value="3000" 
+                                step="100" 
+                                min="0"
+                                placeholder="3000">
+                        </div>
+
+                        <!-- Resultado Bridge -->
+                        <div class="result-box bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-red-500/20 rounded-2xl p-5 border-2 border-amber-500/50">
+                            <div class="text-sm text-slate-200 mb-2 font-semibold">🎯 Unidades Necesarias para tu Sueldo</div>
+                            <div class="text-5xl font-black text-amber-500 text-center my-3" id="unidadesNecesarias">0</div>
+                            <div class="text-xs text-slate-300 text-center">unidades por mes</div>
+                            <div class="text-xs text-slate-400 text-center mt-2" id="ventasDiarias">≈ 0 ventas/día</div>
+                        </div>
+                    </div>
+                </section>
+
+            </aside>
+
+            <!-- ========================================
+                 COLUMNA DERECHA: RESULTADOS EN TIEMPO REAL
+            ========================================= -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- 💵 PRECIO DE VENTA + SIMULADOR -->
+                <section class="glass-card rounded-3xl p-6 slide-in">
+                    <h2 class="section-title">
+                        <span class="text-2xl mr-2">💵</span> Precio de Venta al Público
+                    </h2>
+                    
+                    <input 
+                        type="number" 
+                        id="precioVenta" 
+                        class="input-glass text-center text-4xl font-black mb-4" 
+                        value="120.00" 
+                        step="0.01" 
+                        min="0"
+                        placeholder="0.00">
+                    
+                    <!-- Simulador "Qué pasaría si..." -->
+                    <div class="bg-slate-900/30 rounded-2xl p-4">
+                        <h3 class="text-sm font-semibold text-slate-300 mb-3">⚡ Simulador Rápido</h3>
+                        <div class="flex gap-2 flex-wrap">
+                            <button onclick="simularCambio(5)" class="btn-simulator bg-blue-600 hover:bg-blue-700">
+                                +5% 📈
+                            </button>
+                            <button onclick="simularCambio(10)" class="btn-simulator bg-blue-600 hover:bg-blue-700">
+                                +10% 📈
+                            </button>
+                            <button onclick="simularCambio(15)" class="btn-simulator bg-blue-600 hover:bg-blue-700">
+                                +15% 🚀
+                            </button>
+                            <button onclick="simularCambio(-5)" class="btn-simulator bg-red-600 hover:bg-red-700">
+                                -5% 📉
+                            </button>
+                            <button onclick="simularCambio(-10)" class="btn-simulator bg-red-600 hover:bg-red-700">
+                                -10% 📉
+                            </button>
+                            <button onclick="cambiarPasarela('efectivo')" class="btn-simulator bg-green-600 hover:bg-green-700">
+                                💵 Efectivo
+                            </button>
+                            <button onclick="cambiarPasarela('yape')" class="btn-simulator bg-purple-600 hover:bg-purple-700">
+                                📱 Yape
+                            </button>
+                            <button onclick="resetearValores()" class="btn-simulator bg-slate-600 hover:bg-slate-700">
+                                🔄 Reset
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 🚦 SEMÁFORO DE RENTABILIDAD -->
+                <section class="glass-card rounded-3xl p-8 slide-in semaforo-container" id="semaforoCard">
+                    <div class="text-center mb-6">
+                        <div class="text-7xl mb-4 animate-pulse" id="semaforoIcono">🟢</div>
+                        <h2 class="text-2xl md:text-4xl font-bold text-white mb-3">Margen Neto</h2>
+                        <div class="text-6xl md:text-8xl font-black mb-2" id="margenNeto" style="color: #10b981;">0%</div>
+                        <div class="text-base md:text-lg text-slate-300 font-semibold" id="semaforoMensaje">Excelente rentabilidad</div>
+                    </div>
+
+                    <!-- Desglose Detallado de Rentabilidad -->
+                    <div class="grid grid-cols-2 gap-4 mt-8">
+                        <div class="result-box bg-slate-900/60 rounded-xl p-4 hover:bg-slate-900/80 transition">
+                            <div class="text-xs text-slate-400 mb-1">💚 Ganancia Bruta</div>
+                            <div class="text-xl md:text-2xl font-bold text-green-400" id="gananciaBruta">S/ 0.00</div>
+                        </div>
+                        <div class="result-box bg-slate-900/60 rounded-xl p-4 hover:bg-slate-900/80 transition">
+                            <div class="text-xs text-slate-400 mb-1">✨ Ganancia Neta</div>
+                            <div class="text-xl md:text-2xl font-bold text-amber-500" id="gananciaNeta">S/ 0.00</div>
+                        </div>
+                        <div class="result-box bg-slate-900/60 rounded-xl p-4 hover:bg-slate-900/80 transition">
+                            <div class="text-xs text-slate-400 mb-1">💸 Total Costos</div>
+                            <div class="text-xl md:text-2xl font-bold text-red-400" id="totalCostos">S/ 0.00</div>
+                        </div>
+                        <div class="result-box bg-gradient-to-br from-amber-900/40 to-orange-900/40 rounded-xl p-4 border-2 border-amber-500/50">
+                            <div class="text-xs text-amber-300 mb-1 font-semibold">💰 En Tu Bolsillo</div>
+                            <div class="text-xl md:text-2xl font-black text-amber-400 pulse-gold" id="enBolsillo">S/ 0.00</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 📊 PUNTO DE EQUILIBRIO (BREAK-EVEN) -->
+                <section class="glass-card rounded-3xl p-6 slide-in">
+                    <h2 class="section-title mb-4">
+                        <span class="text-2xl mr-2">📊</span> Punto de Equilibrio
+                    </h2>
+                    <div class="bg-slate-900/30 rounded-2xl p-4">
+                        <canvas id="chartBreakeven" height="100"></canvas>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <div class="text-sm text-slate-400">Unidades para Break-Even</div>
+                        <div class="text-3xl font-bold text-amber-500" id="unidadesBreakeven">0</div>
+                    </div>
+                </section>
+
+                <!-- 📸 EXPORTAR TICKET -->
+                <section class="glass-card rounded-3xl p-6 slide-in">
+                    <button onclick="exportarTicket()" class="btn-export">
+                        <span class="text-2xl mr-2">📸</span>
+                        Exportar Ticket de Rentabilidad
+                    </button>
+                    <p class="text-xs text-center text-slate-400 mt-3">Comparte tus análisis con socios e inversores</p>
+                </section>
+
+                <!-- Footer Info -->
+                <div class="text-center text-slate-500 text-sm py-4">
+                    <p>🚀 MarginMaster Pro v1.0 | Powered by Golden Commerce Ecosystem</p>
+                    <p class="text-xs mt-1">Conectado con <a href="https://sueldopro-2026.vercel.app" target="_blank" class="text-amber-500 hover:text-amber-400">SueldoPro</a></p>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
