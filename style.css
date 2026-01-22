@@ -1,6 +1,6 @@
 /* ========================================
-   MARGINMASTER PRO - STYLESHEET
-   Golden Commerce Ecosystem
+   MARGINMASTER PRO ULTRA - STYLESHEET
+   Golden Commerce Ecosystem v2.0
    ======================================== */
 
 /* ===== RESET Y BASE ===== */
@@ -49,7 +49,7 @@ body {
 }
 
 /* ===== INPUTS ESTILO GLASS ===== */
-.input-glass {
+.input-glass, .input-glass-mini {
     background: rgba(30, 41, 59, 0.8);
     backdrop-filter: blur(10px);
     border: 2px solid rgba(245, 158, 11, 0.3);
@@ -63,7 +63,12 @@ body {
     outline: none;
 }
 
-.input-glass:focus {
+.input-glass-mini {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+.input-glass:focus, .input-glass-mini:focus {
     border-color: #f59e0b;
     background: rgba(30, 41, 59, 0.95);
     box-shadow: 
@@ -72,12 +77,60 @@ body {
     transform: scale(1.02);
 }
 
-.input-glass::placeholder {
+.input-glass::placeholder, .input-glass-mini::placeholder {
     color: rgba(148, 163, 184, 0.5);
 }
 
-.input-glass:hover {
+.input-glass:hover, .input-glass-mini:hover {
     border-color: rgba(245, 158, 11, 0.5);
+}
+
+/* ===== TOGGLE SWITCH ===== */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(71, 85, 105, 0.5);
+    transition: 0.4s;
+    border-radius: 24px;
+    border: 2px solid rgba(148, 163, 184, 0.3);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+    border-color: #f59e0b;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
 }
 
 /* ===== LABELS Y GRUPOS ===== */
@@ -146,12 +199,8 @@ body {
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .fade-in {
@@ -159,16 +208,23 @@ body {
 }
 
 @keyframes float {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
 }
 
 .float-animation {
     animation: float 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+.shimmer {
+    background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.3), transparent);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
 }
 
 /* ===== SEMÁFORO DE RENTABILIDAD ===== */
@@ -201,7 +257,7 @@ body {
         inset 0 0 60px rgba(16, 185, 129, 0.1);
 }
 
-/* ===== BOTONES SIMULADOR ===== */
+/* ===== BOTONES ===== */
 .btn-simulator {
     padding: 0.625rem 1rem;
     border-radius: 0.75rem;
@@ -223,14 +279,30 @@ body {
     transform: translateY(0) scale(0.98);
 }
 
-/* ===== BOTÓN EXPORTAR ===== */
+.btn-mini {
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-mini:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
 .btn-export {
     width: 100%;
     background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
     color: white;
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 700;
-    padding: 1.25rem 2rem;
+    padding: 1rem 1.5rem;
     border-radius: 1rem;
     border: none;
     cursor: pointer;
@@ -253,6 +325,43 @@ body {
 
 .btn-export:active {
     transform: translateY(-1px) scale(0.99);
+}
+
+/* ===== PRODUCTOS GUARDADOS ===== */
+.producto-chip {
+    background: rgba(245, 158, 11, 0.2);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fbbf24;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.producto-chip:hover {
+    background: rgba(245, 158, 11, 0.3);
+    border-color: #f59e0b;
+    transform: translateY(-2px);
+}
+
+.producto-chip .delete-btn {
+    background: rgba(220, 38, 38, 0.3);
+    border: none;
+    color: #fca5a5;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+}
+
+.producto-chip .delete-btn:hover {
+    background: rgba(220, 38, 38, 0.5);
 }
 
 /* ===== RESULT BOXES ===== */
@@ -296,7 +405,7 @@ body {
 }
 
 /* ===== SELECT PERSONALIZADO ===== */
-select.input-glass {
+select.input-glass, select.input-glass-mini {
     cursor: pointer;
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23f59e0b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
@@ -306,7 +415,7 @@ select.input-glass {
     padding-right: 2.5rem;
 }
 
-select.input-glass option {
+select.input-glass option, select.input-glass-mini option {
     background: #1e293b;
     color: white;
     padding: 0.5rem;
@@ -331,13 +440,13 @@ select.input-glass option {
     }
     
     .btn-export {
-        font-size: 1rem;
-        padding: 1rem 1.5rem;
+        font-size: 0.875rem;
+        padding: 0.875rem 1.25rem;
     }
 }
 
 @media (max-width: 640px) {
-    .input-glass {
+    .input-glass, .input-glass-mini {
         font-size: 0.875rem;
         padding: 0.75rem 0.875rem;
     }
@@ -357,23 +466,6 @@ select.input-glass option {
     box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
 }
 
-/* ===== EFECTOS DE CARGA ===== */
-@keyframes shimmer {
-    0% {
-        background-position: -1000px 0;
-    }
-    100% {
-        background-position: 1000px 0;
-    }
-}
-
-.shimmer {
-    background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.3), transparent);
-    background-size: 1000px 100%;
-    animation: shimmer 2s infinite;
-}
-
-/* ===== ESTADOS HOVER PARA INTERACTIVIDAD ===== */
 .interactive-hover {
     transition: all 0.3s ease;
 }

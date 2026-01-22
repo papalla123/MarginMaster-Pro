@@ -1,111 +1,123 @@
 /* ========================================
-   MARGINMASTER PRO - DATABASE
-   Matriz completa de pasarelas y tasas SUNAT 2026
-   Golden Commerce Ecosystem
+   MARGINMASTER PRO ULTRA - DATABASE
+   Matriz Global Multipaís + APIs Avanzadas
+   Golden Commerce Ecosystem v2.0
    ======================================== */
 
-// ===== PASARELAS DE PAGO - PERÚ 2026 =====
-const PASARELAS = {
-    efectivo: {
-        nombre: 'Efectivo',
-        comision: 0,          // 0% de comisión
-        fijo: 0,              // Sin tarifa fija
-        aplicaIGV: false,     // No aplica IGV sobre comisión
-        icono: '💵',
-        descripcion: 'Sin comisiones'
+// ===== CONFIGURACIÓN MULTIPAÍS =====
+const PAISES = {
+    PE: {
+        nombre: 'Perú',
+        moneda: 'PEN',
+        simbolo: 'S/',
+        iva: 0.18,
+        nombreIVA: 'IGV',
+        pasarelas: {
+            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' },
+            yape: { nombre: 'Yape Personal', comision: 0, fijo: 0, aplicaIVA: false, icono: '📱' },
+            'yape-empresa': { nombre: 'Yape Empresa', comision: 0.0295, fijo: 0, aplicaIVA: false, icono: '📱' },
+            plin: { nombre: 'Plin Empresa', comision: 0.0295, fijo: 0, aplicaIVA: false, icono: '📱' },
+            izipay: { nombre: 'Izipay', comision: 0.0344, fijo: 0, aplicaIVA: true, icono: '💳' },
+            niubiz: { nombre: 'Niubiz', comision: 0.0344, fijo: 0, aplicaIVA: true, icono: '💳' },
+            culqi: { nombre: 'Culqi', comision: 0.0399, fijo: 1.00, aplicaIVA: true, icono: '💳' },
+            mercadopago: { nombre: 'Mercado Pago', comision: 0.0399, fijo: 1.00, aplicaIVA: true, icono: '💳' }
+        },
+        regimenes: {
+            rus: { nombre: 'Nuevo RUS', tasaRenta: 0.015, aplicaIVA: false },
+            rer: { nombre: 'RER', tasaRenta: 0.015, aplicaIVA: true },
+            mype: { nombre: 'MYPE', tasaRenta: 0.10, aplicaIVA: true },
+            general: { nombre: 'Régimen General', tasaRenta: 0.295, aplicaIVA: true }
+        }
     },
-    yape: {
-        nombre: 'Yape Personal',
-        comision: 0,
-        fijo: 0,
-        aplicaIGV: false,
-        icono: '📱',
-        descripcion: 'Gratis entre personas'
+    MX: {
+        nombre: 'México',
+        moneda: 'MXN',
+        simbolo: '$',
+        iva: 0.16,
+        nombreIVA: 'IVA',
+        pasarelas: {
+            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' },
+            oxxo: { nombre: 'OXXO Pay', comision: 0.035, fijo: 8, aplicaIVA: true, icono: '🏪' },
+            conekta: { nombre: 'Conekta', comision: 0.036, fijo: 3, aplicaIVA: true, icono: '💳' },
+            openpay: { nombre: 'OpenPay', comision: 0.029, fijo: 2.5, aplicaIVA: true, icono: '💳' },
+            stripe: { nombre: 'Stripe', comision: 0.036, fijo: 3, aplicaIVA: true, icono: '💳' },
+            mercadopago: { nombre: 'Mercado Pago', comision: 0.0399, fijo: 4, aplicaIVA: true, icono: '💳' }
+        },
+        regimenes: {
+            resico: { nombre: 'RESICO', tasaRenta: 0.01, aplicaIVA: true },
+            simplificado: { nombre: 'Simplificado de Confianza', tasaRenta: 0.025, aplicaIVA: true },
+            general: { nombre: 'Régimen General', tasaRenta: 0.30, aplicaIVA: true }
+        }
     },
-    'yape-empresa': {
-        nombre: 'Yape Empresa',
-        comision: 0.0295,     // 2.95%
-        fijo: 0,
-        aplicaIGV: false,
-        icono: '📱',
-        descripcion: '2.95% por transacción'
+    CO: {
+        nombre: 'Colombia',
+        moneda: 'COP',
+        simbolo: '$',
+        iva: 0.19,
+        nombreIVA: 'IVA',
+        pasarelas: {
+            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' },
+            nequi: { nombre: 'Nequi', comision: 0.02, fijo: 0, aplicaIVA: false, icono: '📱' },
+            daviplata: { nombre: 'Daviplata', comision: 0.02, fijo: 0, aplicaIVA: false, icono: '📱' },
+            bold: { nombre: 'Bold', comision: 0.0299, fijo: 0, aplicaIVA: true, icono: '💳' },
+            wompi: { nombre: 'Wompi', comision: 0.0349, fijo: 900, aplicaIVA: true, icono: '💳' },
+            payu: { nombre: 'PayU', comision: 0.0349, fijo: 900, aplicaIVA: true, icono: '💳' },
+            mercadopago: { nombre: 'Mercado Pago', comision: 0.0399, fijo: 1000, aplicaIVA: true, icono: '💳' }
+        },
+        regimenes: {
+            simple: { nombre: 'Régimen Simple', tasaRenta: 0.02, aplicaIVA: false },
+            ordinario: { nombre: 'Régimen Ordinario', tasaRenta: 0.35, aplicaIVA: true }
+        }
     },
-    plin: {
-        nombre: 'Plin Empresa',
-        comision: 0.0295,     // 2.95%
-        fijo: 0,
-        aplicaIGV: false,
-        icono: '📱',
-        descripcion: '2.95% por transacción'
-    },
-    izipay: {
-        nombre: 'Izipay',
-        comision: 0.0344,     // 3.44%
-        fijo: 0,
-        aplicaIGV: true,      // Se cobra IGV sobre la comisión
-        icono: '💳',
-        descripcion: '3.44% + IGV'
-    },
-    niubiz: {
-        nombre: 'Niubiz',
-        comision: 0.0344,     // 3.44%
-        fijo: 0,
-        aplicaIGV: true,
-        icono: '💳',
-        descripcion: '3.44% + IGV'
-    },
-    culqi: {
-        nombre: 'Culqi',
-        comision: 0.0399,     // 3.99%
-        fijo: 1.00,           // S/ 1.00 por transacción
-        aplicaIGV: true,
-        icono: '💳',
-        descripcion: '3.99% + S/1.00 + IGV'
-    },
-    mercadopago: {
-        nombre: 'Mercado Pago',
-        comision: 0.0399,     // 3.99%
-        fijo: 1.00,           // S/ 1.00 por transacción
-        aplicaIGV: true,
-        icono: '💳',
-        descripcion: '3.99% + S/1.00 + IGV'
+    CL: {
+        nombre: 'Chile',
+        moneda: 'CLP',
+        simbolo: '$',
+        iva: 0.19,
+        nombreIVA: 'IVA',
+        pasarelas: {
+            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' },
+            khipu: { nombre: 'Khipu', comision: 0.029, fijo: 0, aplicaIVA: true, icono: '💳' },
+            flow: { nombre: 'Flow', comision: 0.035, fijo: 0, aplicaIVA: true, icono: '💳' },
+            webpay: { nombre: 'Webpay Plus', comision: 0.0349, fijo: 0, aplicaIVA: true, icono: '💳' },
+            mercadopago: { nombre: 'Mercado Pago', comision: 0.0399, fijo: 500, aplicaIVA: true, icono: '💳' }
+        },
+        regimenes: {
+            pro_pyme: { nombre: 'Pro Pyme', tasaRenta: 0.25, aplicaIVA: true },
+            general: { nombre: 'Régimen General', tasaRenta: 0.27, aplicaIVA: true }
+        }
     }
 };
 
-// ===== REGÍMENES TRIBUTARIOS SUNAT 2026 =====
-const REGIMENES = {
-    rus: {
-        nombre: 'Nuevo RUS',
-        tasaRenta: 0.015,      // 1.5% sobre ingresos brutos
-        aplicaIGV: false,      // No se paga IGV por separado
-        descripcion: 'Régimen Único Simplificado - Ideal para pequeños negocios',
-        limite: 96000          // Límite anual en soles
-    },
-    rer: {
-        nombre: 'RER',
-        tasaRenta: 0.015,      // 1.5% sobre ingresos netos
-        aplicaIGV: true,       // Sí paga IGV 18%
-        descripcion: 'Régimen Especial de Renta - Para negocios en crecimiento',
-        limite: 525000         // Límite anual en soles
-    },
-    mype: {
-        nombre: 'MYPE',
-        tasaRenta: 0.10,       // 10% sobre utilidades
-        aplicaIGV: true,       // Sí paga IGV 18%
-        descripcion: 'Régimen MYPE Tributario - Micro y Pequeñas Empresas'
-    },
-    general: {
-        nombre: 'Régimen General',
-        tasaRenta: 0.295,      // 29.5% sobre utilidades
-        aplicaIGV: true,       // Sí paga IGV 18%
-        descripcion: 'Régimen General - Para empresas consolidadas'
-    }
+// ===== PARTIDAS ARANCELARIAS (SAMPLE) =====
+const ARANCELES = {
+    // Café
+    '0901.21.00.00': { descripcion: 'Café tostado sin descafeinar', adValorem: 0.11 },
+    '0901.22.00.00': { descripcion: 'Café tostado descafeinado', adValorem: 0.11 },
+    
+    // Textiles
+    '6109.10.00.31': { descripcion: 'T-shirts de algodón', adValorem: 0.11 },
+    '6203.42.00.00': { descripcion: 'Pantalones de algodón', adValorem: 0.11 },
+    
+    // Electrónica
+    '8517.62.00.00': { descripcion: 'Máquinas receptoras para telefonía', adValorem: 0.00 },
+    '8471.30.00.00': { descripcion: 'Computadoras portátiles', adValorem: 0.00 },
+    
+    // Alimentos
+    '1905.90.00.00': { descripcion: 'Productos de panadería', adValorem: 0.09 },
+    '2106.90.99.00': { descripcion: 'Preparaciones alimenticias', adValorem: 0.11 }
 };
 
-// ===== TASA IGV PERÚ =====
-const IGV = 0.18; // 18%
+// ===== COMMODITIES Y PRECIOS (SIMULACIÓN) =====
+const COMMODITIES = {
+    cafe: { nombre: 'Café Arábica', unidad: 'kg', precioBase: 8.50, variacion: 0 },
+    harina: { nombre: 'Harina de Trigo', unidad: 'kg', precioBase: 2.20, variacion: 0 },
+    azucar: { nombre: 'Azúcar', unidad: 'kg', precioBase: 1.80, variacion: 0 },
+    petroleo: { nombre: 'Petróleo WTI', unidad: 'barril', precioBase: 78.00, variacion: 0 },
+    algodon: { nombre: 'Algodón', unidad: 'kg', precioBase: 4.20, variacion: 0 }
+};
 
-// ===== CONFIGURACIÓN SEMÁFORO DE RENTABILIDAD =====
+// ===== SEMÁFORO DE RENTABILIDAD =====
 const SEMAFORO = {
     rojo: {
         min: 0,
@@ -135,25 +147,65 @@ const SEMAFORO = {
 
 // ===== API ENDPOINTS =====
 const API = {
-    // API de tipo de cambio (Free)
+    // Tipo de cambio
     tipoCambio: 'https://api.exchangerate-api.com/v4/latest/USD',
+    tipoCambioBackup: 'https://api.frankfurter.app/latest?from=USD',
     
-    // Backup: API alternativa
-    tipoCambioBackup: 'https://api.frankfurter.app/latest?from=USD&to=PEN',
+    // Commodities (simulación - en producción usar APIs reales)
+    commodities: 'https://api.example.com/commodities',
     
-    // Valor por defecto si falla
-    tipoCambioDefault: 3.75
+    // Aduanas VUCE (simulación)
+    vuce: 'https://api.example.com/vuce',
+    
+    // Google Maps Distance Matrix
+    googleMaps: 'https://maps.googleapis.com/maps/api/distancematrix/json',
+    
+    // Valores por defecto
+    tipoCambioDefault: {
+        PE: 3.75,
+        MX: 17.50,
+        CO: 4200,
+        CL: 920
+    }
 };
 
 // ===== CONSTANTES DE CÁLCULO =====
 const CALCULOS = {
-    diasLaborablesMes: 26,        // Días hábiles promedio por mes
-    horasDiarias: 8,              // Jornada laboral estándar
-    semanasMes: 4.33,             // Semanas promedio por mes
-    mesesAnio: 12,                // Meses del año
-    mermaMaxima: 100,             // Porcentaje máximo de merma permitido
-    precioMinimo: 0.01            // Precio mínimo aceptable
+    diasLaborablesMes: 26,
+    horasDiarias: 8,
+    semanasMes: 4.33,
+    mesesAnio: 12,
+    mermaMaxima: 100,
+    precioMinimo: 0.01,
+    
+    // Costos de envío por km (estimación)
+    costoPorKm: 0.50,
+    costoBase: 5.00
 };
+
+// ===== SUGERENCIAS IA (REGLAS DE NEGOCIO) =====
+const SUGERENCIAS_IA = [
+    {
+        condicion: (margen) => margen > 60,
+        mensaje: '🚀 Este producto tiene un margen excepcional del {margen}%. Es momento de escalar: invierte en publicidad digital (TikTok, Meta Ads) para multiplicar ventas.'
+    },
+    {
+        condicion: (margen) => margen >= 40 && margen <= 60,
+        mensaje: '💎 Margen sólido del {margen}%. Considera crear combos o upsells para aumentar el ticket promedio sin sacrificar rentabilidad.'
+    },
+    {
+        condicion: (margen) => margen >= 20 && margen < 40,
+        mensaje: '⚡ Margen moderado del {margen}%. Optimiza costos: negocia mejores precios con proveedores o cambia a una pasarela más económica.'
+    },
+    {
+        condicion: (margen) => margen >= 10 && margen < 20,
+        mensaje: '⚠️ Margen ajustado del {margen}%. Considera aumentar el precio un 10-15% o reducir costos operativos. Este producto necesita mejoras urgentes.'
+    },
+    {
+        condicion: (margen) => margen < 10,
+        mensaje: '🔴 ¡Alerta crítica! Margen del {margen}%. Este producto pierde dinero. Opciones: 1) Aumentar precio 20%+, 2) Reducir costos 30%, 3) Descontinuar y enfocarte en productos rentables.'
+    }
+];
 
 // ===== MENSAJES Y TEXTOS =====
 const MENSAJES = {
@@ -162,6 +214,7 @@ const MENSAJES = {
     advertenciaPrecio: '⚠️ El precio de venta debe ser mayor al costo total',
     advertenciaMerma: '⚠️ El porcentaje de merma parece muy alto',
     exportExito: '✓ Ticket exportado correctamente',
+    guardadoExito: '✓ Producto guardado correctamente',
     cargando: 'Cargando...',
     noData: 'Sin datos'
 };
@@ -170,7 +223,6 @@ const MENSAJES = {
 const FORMATOS = {
     moneda: {
         style: 'currency',
-        currency: 'PEN',
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     },
@@ -187,19 +239,55 @@ const FORMATOS = {
 
 // ===== COLORES TEMÁTICOS =====
 const COLORES = {
-    principal: '#f59e0b',     // Amber-500
-    secundario: '#ea580c',    // Orange-600
-    exito: '#10b981',         // Green-500
-    advertencia: '#f59e0b',   // Amber-500
-    peligro: '#dc2626',       // Red-600
-    info: '#3b82f6',          // Blue-500
-    fondo: '#0f172a',         // Slate-950
-    texto: '#e2e8f0'          // Slate-200
+    principal: '#f59e0b',
+    secundario: '#ea580c',
+    exito: '#10b981',
+    advertencia: '#f59e0b',
+    peligro: '#dc2626',
+    info: '#3b82f6',
+    fondo: '#0f172a',
+    texto: '#e2e8f0'
 };
 
-// ===== EXPORTAR PARA USO GLOBAL =====
-// Estas variables ya están en el scope global por estar en data.js
+// ===== STORAGE KEYS =====
+const STORAGE_KEYS = {
+    productos: 'marginmaster_productos',
+    paisActual: 'marginmaster_pais',
+    ultimoCalculo: 'marginmaster_ultimo'
+};
 
-console.log('✓ MarginMaster Pro - Data loaded successfully');
-console.log('📊 Pasarelas disponibles:', Object.keys(PASARELAS).length);
-console.log('🏛️ Regímenes SUNAT:', Object.keys(REGIMENES).length);
+// ===== FUNCIONES HELPER GLOBALES =====
+
+// Obtener país actual
+function getPaisActual() {
+    const stored = localStorage.getItem(STORAGE_KEYS.paisActual);
+    return stored || 'PE';
+}
+
+// Obtener configuración del país
+function getConfigPais(codigoPais) {
+    return PAISES[codigoPais] || PAISES.PE;
+}
+
+// Formatear moneda según país
+function formatearMonedaPais(valor, codigoPais) {
+    const config = getConfigPais(codigoPais);
+    return new Intl.NumberFormat('es', {
+        style: 'currency',
+        currency: config.moneda,
+        minimumFractionDigits: config.moneda === 'CLP' ? 0 : 2,
+        maximumFractionDigits: config.moneda === 'CLP' ? 0 : 2
+    }).format(valor);
+}
+
+// Simular variación de commodities (en producción, usar API real)
+function simularVariacionCommodities() {
+    Object.keys(COMMODITIES).forEach(key => {
+        COMMODITIES[key].variacion = (Math.random() * 10 - 5).toFixed(2);
+    });
+}
+
+console.log('✓ MarginMaster Pro Ultra - Data loaded successfully');
+console.log('🌎 Países disponibles:', Object.keys(PAISES).length);
+console.log('📦 Partidas arancelarias cargadas:', Object.keys(ARANCELES).length);
+console.log('📊 Commodities monitoreados:', Object.keys(COMMODITIES).length);

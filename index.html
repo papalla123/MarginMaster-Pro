@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MarginMaster Pro - Simulador de Rentabilidad para emprendedores peruanos">
-    <title>MarginMaster Pro - Inteligencia de Rentabilidad</title>
+    <meta name="description" content="MarginMaster Pro Ultra - Inteligencia de Rentabilidad Global">
+    <title>MarginMaster Pro Ultra - IA de Rentabilidad</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -24,17 +24,44 @@
     <!-- Header Principal -->
     <header class="header-container">
         <div class="max-w-7xl mx-auto">
-            <div class="glass rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="text-center md:text-left">
-                    <h1 class="text-3xl md:text-5xl font-black text-white mb-2 logo-text">
-                        💰 MarginMaster <span class="text-amber-500">Pro</span>
-                    </h1>
-                    <p class="text-slate-400 text-sm md:text-base">Inteligencia de Rentabilidad para el Mercado Peruano 🇵🇪</p>
+            <div class="glass rounded-3xl p-6">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+                    <div class="text-center md:text-left">
+                        <h1 class="text-3xl md:text-5xl font-black text-white mb-2 logo-text">
+                            💰 MarginMaster <span class="text-amber-500">Pro Ultra</span>
+                        </h1>
+                        <p class="text-slate-400 text-sm md:text-base">Inteligencia Global de Rentabilidad + IA Predictiva 🤖</p>
+                    </div>
+                    <div class="flex gap-4 items-center">
+                        <!-- Selector de País -->
+                        <div class="text-center">
+                            <div class="text-xs text-slate-400 mb-1">País / Market</div>
+                            <select id="paisSelector" class="input-glass-mini text-sm px-3 py-2">
+                                <option value="PE">🇵🇪 Perú</option>
+                                <option value="MX">🇲🇽 México</option>
+                                <option value="CO">🇨🇴 Colombia</option>
+                                <option value="CL">🇨🇱 Chile</option>
+                            </select>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-xs text-slate-400">Tipo de Cambio USD</div>
+                            <div class="text-2xl md:text-3xl font-bold text-amber-500 pulse-gold" id="tipoCambio">S/ 3.75</div>
+                            <div class="text-xs text-slate-500" id="fechaTipoCambio">Actualizando...</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="text-center">
-                    <div class="text-xs md:text-sm text-slate-400">Tipo de Cambio USD → PEN</div>
-                    <div class="text-2xl md:text-3xl font-bold text-amber-500 pulse-gold" id="tipoCambio">S/ 3.75</div>
-                    <div class="text-xs text-slate-500" id="fechaTipoCambio">Actualizando...</div>
+                
+                <!-- Barra de Productos Guardados -->
+                <div class="bg-slate-900/30 rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-sm font-semibold text-slate-300">📦 Productos Guardados</h3>
+                        <button onclick="nuevoProducto()" class="btn-mini bg-amber-600 hover:bg-amber-700">
+                            + Nuevo
+                        </button>
+                    </div>
+                    <div id="productosGuardados" class="flex gap-2 overflow-x-auto pb-2">
+                        <div class="text-xs text-slate-500">No hay productos guardados</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -44,58 +71,88 @@
     <main class="main-container">
         <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- ========================================
-                 COLUMNA IZQUIERDA: CONFIGURACIÓN
-            ========================================= -->
+            <!-- COLUMNA IZQUIERDA: CONFIGURACIÓN -->
             <aside class="lg:col-span-1 space-y-6">
                 
-                <!-- 📦 ESCANDALLO PRO -->
+                <!-- Nombre del Producto -->
+                <section class="glass-card rounded-3xl p-6 slide-in">
+                    <h2 class="section-title">
+                        <span class="text-2xl mr-2">🏷️</span> Producto
+                    </h2>
+                    <input 
+                        type="text" 
+                        id="nombreProducto" 
+                        class="input-glass text-lg font-semibold" 
+                        placeholder="Ej: Café Premium 250g"
+                        value="Mi Producto">
+                </section>
+
+                <!-- 📦 ESCANDALLO PRO CON IMPORTACIÓN -->
                 <section class="glass-card rounded-3xl p-6 slide-in">
                     <h2 class="section-title">
                         <span class="text-2xl mr-2">📦</span> Escandallo Pro
                     </h2>
                     
                     <div class="space-y-4">
-                        <!-- Costo de Compra -->
+                        <!-- Toggle Importado -->
+                        <div class="bg-slate-900/50 rounded-xl p-3 flex items-center justify-between">
+                            <label class="text-sm text-slate-300 font-semibold">🌎 Producto Importado</label>
+                            <label class="switch">
+                                <input type="checkbox" id="esImportado">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Partida Arancelaria (solo si es importado) -->
+                        <div id="seccionImportacion" style="display: none;">
+                            <label class="input-label">Partida Arancelaria</label>
+                            <input 
+                                type="text" 
+                                id="partidaArancelaria" 
+                                class="input-glass" 
+                                placeholder="Ej: 0901.21.00.00"
+                                maxlength="12">
+                            <div class="text-xs text-slate-500 mt-1" id="infoArancel">Ad Valorem: Calculando...</div>
+                        </div>
+
                         <div class="input-group">
-                            <label for="costoCompra" class="input-label">Costo de Compra (S/)</label>
+                            <label for="costoCompra" class="input-label">Costo de Compra (Moneda Local)</label>
                             <input 
                                 type="number" 
                                 id="costoCompra" 
                                 class="input-glass" 
                                 value="50.00" 
                                 step="0.01" 
-                                min="0"
-                                placeholder="0.00">
+                                min="0">
                         </div>
                         
-                        <!-- Packaging -->
                         <div class="input-group">
-                            <label for="packaging" class="input-label">Packaging (S/)</label>
+                            <label for="packaging" class="input-label">Packaging</label>
                             <input 
                                 type="number" 
                                 id="packaging" 
                                 class="input-glass" 
                                 value="5.00" 
                                 step="0.01" 
-                                min="0"
-                                placeholder="0.00">
+                                min="0">
                         </div>
                         
-                        <!-- Envío -->
+                        <!-- Envío Inteligente -->
                         <div class="input-group">
-                            <label for="envio" class="input-label">Envío (S/)</label>
+                            <label for="envio" class="input-label">
+                                Envío 
+                                <span class="text-xs text-amber-500 cursor-pointer" onclick="calcularEnvioReal()">📍 Calcular Real</span>
+                            </label>
                             <input 
                                 type="number" 
                                 id="envio" 
                                 class="input-glass" 
                                 value="8.00" 
                                 step="0.01" 
-                                min="0"
-                                placeholder="0.00">
+                                min="0">
+                            <div class="text-xs text-slate-500 mt-1" id="infoEnvio">Estimado manual</div>
                         </div>
                         
-                        <!-- Merma % -->
                         <div class="input-group">
                             <label for="merma" class="input-label">Merma (%)</label>
                             <input 
@@ -105,11 +162,15 @@
                                 value="5" 
                                 step="0.1" 
                                 min="0" 
-                                max="100"
-                                placeholder="5">
+                                max="100">
                         </div>
 
-                        <!-- Total Escandallo -->
+                        <!-- Alerta de Commodities -->
+                        <div id="alertaCommodity" class="bg-red-900/30 rounded-xl p-3 border border-red-500/50" style="display: none;">
+                            <div class="text-xs text-red-300 font-semibold mb-1">⚠️ Alerta de Precios</div>
+                            <div class="text-xs text-red-200" id="mensajeCommodity"></div>
+                        </div>
+
                         <div class="result-box border-t border-amber-500/30 pt-4 mt-4">
                             <div class="text-sm text-slate-400 mb-1">💎 Costo Total Unitario</div>
                             <div class="text-3xl font-black text-amber-500" id="costoTotal">S/ 0.00</div>
@@ -117,7 +178,7 @@
                     </div>
                 </section>
 
-                <!-- 💳 MOTOR DE PASARELAS -->
+                <!-- 💳 MOTOR DE PASARELAS (DINÁMICO POR PAÍS) -->
                 <section class="glass-card rounded-3xl p-6 slide-in">
                     <h2 class="section-title">
                         <span class="text-2xl mr-2">💳</span> Pasarela de Pago
@@ -125,17 +186,9 @@
                     
                     <div class="space-y-4">
                         <select id="pasarela" class="input-glass">
-                            <option value="efectivo">💵 Efectivo (0%)</option>
-                            <option value="yape">📱 Yape Personal (0%)</option>
-                            <option value="yape-empresa">📱 Yape Empresa (2.95%)</option>
-                            <option value="plin">📱 Plin Empresa (2.95%)</option>
-                            <option value="izipay">💳 Izipay (3.44% + IGV)</option>
-                            <option value="niubiz">💳 Niubiz (3.44% + IGV)</option>
-                            <option value="culqi">💳 Culqi (3.99% + S/1 + IGV)</option>
-                            <option value="mercadopago">💳 Mercado Pago (3.99% + S/1 + IGV)</option>
+                            <!-- Se llena dinámicamente según el país -->
                         </select>
 
-                        <!-- Desglose Comisión -->
                         <div class="result-box bg-slate-900/50 rounded-xl p-4">
                             <div class="text-xs text-slate-400 mb-1">Mordisco de la Pasarela</div>
                             <div class="text-2xl font-bold text-red-400" id="comisionPasarela">S/ 0.00</div>
@@ -144,24 +197,20 @@
                     </div>
                 </section>
 
-                <!-- 🏛️ CALCULADORA SUNAT -->
+                <!-- 🏛️ CALCULADORA FISCAL (DINÁMICO POR PAÍS) -->
                 <section class="glass-card rounded-3xl p-6 slide-in">
                     <h2 class="section-title">
-                        <span class="text-2xl mr-2">🏛️</span> SUNAT 2026
+                        <span class="text-2xl mr-2">🏛️</span> Impuestos
                     </h2>
                     
                     <div class="space-y-4">
                         <select id="regimen" class="input-glass">
-                            <option value="rus">Nuevo RUS (1.5%)</option>
-                            <option value="rer">RER (1.5% + IGV 18%)</option>
-                            <option value="mype">MYPE (10% + IGV 18%)</option>
-                            <option value="general">Régimen General (29.5% + IGV 18%)</option>
+                            <!-- Se llena dinámicamente según el país -->
                         </select>
 
-                        <!-- Desglose SUNAT -->
                         <div class="space-y-3">
                             <div class="result-box bg-slate-900/50 rounded-xl p-3">
-                                <div class="text-xs text-slate-400">IGV (18%)</div>
+                                <div class="text-xs text-slate-400" id="labelIVA">IVA/IGV</div>
                                 <div class="text-lg font-bold text-orange-400" id="igv">S/ 0.00</div>
                             </div>
                             <div class="result-box bg-slate-900/50 rounded-xl p-3">
@@ -176,30 +225,27 @@
                     </div>
                 </section>
 
-                <!-- 🌉 THE BRIDGE - SUELDOPRO INTEGRATION -->
-                <section class="glass-card rounded-3xl p-6 slide-in border-2 border-amber-500/50 shadow-2xl">
+                <!-- 🌉 THE BRIDGE -->
+                <section class="glass-card rounded-3xl p-6 slide-in border-2 border-amber-500/50">
                     <h2 class="section-title">
                         <span class="text-2xl mr-2">🌉</span> The Bridge
                     </h2>
                     <p class="text-xs text-slate-400 mb-4">Conectado con SueldoPro</p>
                     
                     <div class="space-y-4">
-                        <!-- Input Sueldo Deseado -->
                         <div class="input-group">
-                            <label for="sueldoDeseado" class="input-label">💰 Sueldo Deseado Mensual (S/)</label>
+                            <label for="sueldoDeseado" class="input-label">💰 Sueldo Deseado Mensual</label>
                             <input 
                                 type="number" 
                                 id="sueldoDeseado" 
                                 class="input-glass text-xl font-bold" 
                                 value="3000" 
                                 step="100" 
-                                min="0"
-                                placeholder="3000">
+                                min="0">
                         </div>
 
-                        <!-- Resultado Bridge -->
                         <div class="result-box bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-red-500/20 rounded-2xl p-5 border-2 border-amber-500/50">
-                            <div class="text-sm text-slate-200 mb-2 font-semibold">🎯 Unidades Necesarias para tu Sueldo</div>
+                            <div class="text-sm text-slate-200 mb-2 font-semibold">🎯 Unidades para tu Sueldo</div>
                             <div class="text-5xl font-black text-amber-500 text-center my-3" id="unidadesNecesarias">0</div>
                             <div class="text-xs text-slate-300 text-center">unidades por mes</div>
                             <div class="text-xs text-slate-400 text-center mt-2" id="ventasDiarias">≈ 0 ventas/día</div>
@@ -209,15 +255,13 @@
 
             </aside>
 
-            <!-- ========================================
-                 COLUMNA DERECHA: RESULTADOS EN TIEMPO REAL
-            ========================================= -->
+            <!-- COLUMNA DERECHA: RESULTADOS -->
             <div class="lg:col-span-2 space-y-6">
                 
-                <!-- 💵 PRECIO DE VENTA + SIMULADOR -->
+                <!-- 💵 PRECIO + SIMULADOR + COMPETENCIA -->
                 <section class="glass-card rounded-3xl p-6 slide-in">
                     <h2 class="section-title">
-                        <span class="text-2xl mr-2">💵</span> Precio de Venta al Público
+                        <span class="text-2xl mr-2">💵</span> Precio de Venta
                     </h2>
                     
                     <input 
@@ -226,37 +270,38 @@
                         class="input-glass text-center text-4xl font-black mb-4" 
                         value="120.00" 
                         step="0.01" 
-                        min="0"
-                        placeholder="0.00">
+                        min="0">
                     
-                    <!-- Simulador "Qué pasaría si..." -->
+                    <!-- Modo Competencia Infernal -->
+                    <div class="bg-red-900/20 rounded-2xl p-4 mb-4 border border-red-500/30">
+                        <h3 class="text-sm font-semibold text-red-300 mb-2 flex items-center">
+                            🔥 Modo Competencia Infernal
+                        </h3>
+                        <div class="flex gap-2">
+                            <input 
+                                type="number" 
+                                id="precioCompetencia" 
+                                class="input-glass flex-1" 
+                                placeholder="Precio del competidor"
+                                step="0.01">
+                            <button onclick="analizarCompetencia()" class="btn-mini bg-red-600 hover:bg-red-700">
+                                Analizar
+                            </button>
+                        </div>
+                        <div id="resultadoCompetencia" class="text-xs text-red-200 mt-2" style="display: none;"></div>
+                    </div>
+
+                    <!-- Simulador Rápido -->
                     <div class="bg-slate-900/30 rounded-2xl p-4">
                         <h3 class="text-sm font-semibold text-slate-300 mb-3">⚡ Simulador Rápido</h3>
                         <div class="flex gap-2 flex-wrap">
-                            <button onclick="simularCambio(5)" class="btn-simulator bg-blue-600 hover:bg-blue-700">
-                                +5% 📈
-                            </button>
-                            <button onclick="simularCambio(10)" class="btn-simulator bg-blue-600 hover:bg-blue-700">
-                                +10% 📈
-                            </button>
-                            <button onclick="simularCambio(15)" class="btn-simulator bg-blue-600 hover:bg-blue-700">
-                                +15% 🚀
-                            </button>
-                            <button onclick="simularCambio(-5)" class="btn-simulator bg-red-600 hover:bg-red-700">
-                                -5% 📉
-                            </button>
-                            <button onclick="simularCambio(-10)" class="btn-simulator bg-red-600 hover:bg-red-700">
-                                -10% 📉
-                            </button>
-                            <button onclick="cambiarPasarela('efectivo')" class="btn-simulator bg-green-600 hover:bg-green-700">
-                                💵 Efectivo
-                            </button>
-                            <button onclick="cambiarPasarela('yape')" class="btn-simulator bg-purple-600 hover:bg-purple-700">
-                                📱 Yape
-                            </button>
-                            <button onclick="resetearValores()" class="btn-simulator bg-slate-600 hover:bg-slate-700">
-                                🔄 Reset
-                            </button>
+                            <button onclick="simularCambio(5)" class="btn-simulator bg-blue-600 hover:bg-blue-700">+5% 📈</button>
+                            <button onclick="simularCambio(10)" class="btn-simulator bg-blue-600 hover:bg-blue-700">+10% 📈</button>
+                            <button onclick="simularCambio(15)" class="btn-simulator bg-blue-600 hover:bg-blue-700">+15% 🚀</button>
+                            <button onclick="simularCambio(-5)" class="btn-simulator bg-red-600 hover:bg-red-700">-5% 📉</button>
+                            <button onclick="simularCambio(-10)" class="btn-simulator bg-red-600 hover:bg-red-700">-10% 📉</button>
+                            <button onclick="cambiarPasarela(0)" class="btn-simulator bg-green-600 hover:bg-green-700">💵 Efectivo</button>
+                            <button onclick="resetearValores()" class="btn-simulator bg-slate-600 hover:bg-slate-700">🔄 Reset</button>
                         </div>
                     </div>
                 </section>
@@ -270,17 +315,16 @@
                         <div class="text-base md:text-lg text-slate-300 font-semibold" id="semaforoMensaje">Excelente rentabilidad</div>
                     </div>
 
-                    <!-- Desglose Detallado de Rentabilidad -->
                     <div class="grid grid-cols-2 gap-4 mt-8">
-                        <div class="result-box bg-slate-900/60 rounded-xl p-4 hover:bg-slate-900/80 transition">
+                        <div class="result-box bg-slate-900/60 rounded-xl p-4">
                             <div class="text-xs text-slate-400 mb-1">💚 Ganancia Bruta</div>
                             <div class="text-xl md:text-2xl font-bold text-green-400" id="gananciaBruta">S/ 0.00</div>
                         </div>
-                        <div class="result-box bg-slate-900/60 rounded-xl p-4 hover:bg-slate-900/80 transition">
+                        <div class="result-box bg-slate-900/60 rounded-xl p-4">
                             <div class="text-xs text-slate-400 mb-1">✨ Ganancia Neta</div>
                             <div class="text-xl md:text-2xl font-bold text-amber-500" id="gananciaNeta">S/ 0.00</div>
                         </div>
-                        <div class="result-box bg-slate-900/60 rounded-xl p-4 hover:bg-slate-900/80 transition">
+                        <div class="result-box bg-slate-900/60 rounded-xl p-4">
                             <div class="text-xs text-slate-400 mb-1">💸 Total Costos</div>
                             <div class="text-xl md:text-2xl font-bold text-red-400" id="totalCostos">S/ 0.00</div>
                         </div>
@@ -291,7 +335,52 @@
                     </div>
                 </section>
 
-                <!-- 📊 PUNTO DE EQUILIBRIO (BREAK-EVEN) -->
+                <!-- 🤖 IA PREDICTIVA -->
+                <section class="glass-card rounded-3xl p-6 slide-in border-2 border-purple-500/50">
+                    <h2 class="section-title">
+                        <span class="text-2xl mr-2">🤖</span> IA Predictiva
+                    </h2>
+                    <div id="sugerenciaIA" class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/30">
+                        <div class="text-sm text-purple-200 font-semibold mb-2">💡 Sugerencia Inteligente</div>
+                        <div class="text-sm text-purple-100" id="textoIA">Calculando estrategia óptima...</div>
+                    </div>
+                </section>
+
+                <!-- 🛒 ANALIZADOR DE COMBOS -->
+                <section class="glass-card rounded-3xl p-6 slide-in">
+                    <h2 class="section-title">
+                        <span class="text-2xl mr-2">🛒</span> Analizador de Combos
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="flex gap-2">
+                            <input 
+                                type="number" 
+                                id="cantidadCombo" 
+                                class="input-glass flex-1" 
+                                placeholder="Cantidad en combo"
+                                value="3"
+                                min="1">
+                            <input 
+                                type="number" 
+                                id="descuentoCombo" 
+                                class="input-glass flex-1" 
+                                placeholder="% Descuento"
+                                value="15"
+                                min="0"
+                                max="100">
+                            <button onclick="calcularCombo()" class="btn-mini bg-amber-600 hover:bg-amber-700">
+                                Calcular
+                            </button>
+                        </div>
+                        <div id="resultadoCombo" class="bg-slate-900/50 rounded-xl p-4" style="display: none;">
+                            <div class="text-xs text-slate-400">Margen del Combo</div>
+                            <div class="text-2xl font-bold text-amber-500" id="margenCombo">0%</div>
+                            <div class="text-xs text-slate-300 mt-1" id="detalleCombo"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 📊 PUNTO DE EQUILIBRIO -->
                 <section class="glass-card rounded-3xl p-6 slide-in">
                     <h2 class="section-title mb-4">
                         <span class="text-2xl mr-2">📊</span> Punto de Equilibrio
@@ -305,18 +394,24 @@
                     </div>
                 </section>
 
-                <!-- 📸 EXPORTAR TICKET -->
+                <!-- 💾 GUARDAR Y EXPORTAR -->
                 <section class="glass-card rounded-3xl p-6 slide-in">
-                    <button onclick="exportarTicket()" class="btn-export">
-                        <span class="text-2xl mr-2">📸</span>
-                        Exportar Ticket de Rentabilidad
-                    </button>
-                    <p class="text-xs text-center text-slate-400 mt-3">Comparte tus análisis con socios e inversores</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="guardarProducto()" class="btn-export bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                            <span class="text-2xl mr-2">💾</span>
+                            Guardar Producto
+                        </button>
+                        <button onclick="exportarTicket()" class="btn-export">
+                            <span class="text-2xl mr-2">📸</span>
+                            Exportar Ticket
+                        </button>
+                    </div>
+                    <p class="text-xs text-center text-slate-400 mt-3">Los productos se guardan localmente en tu navegador</p>
                 </section>
 
-                <!-- Footer Info -->
+                <!-- Footer -->
                 <div class="text-center text-slate-500 text-sm py-4">
-                    <p>🚀 MarginMaster Pro v1.0 | Powered by Golden Commerce Ecosystem</p>
+                    <p>🚀 MarginMaster Pro Ultra v2.0 | Powered by Golden Commerce Ecosystem</p>
                     <p class="text-xs mt-1">Conectado con <a href="https://sueldopro-2026.vercel.app" target="_blank" class="text-amber-500 hover:text-amber-400">SueldoPro</a></p>
                 </div>
 
