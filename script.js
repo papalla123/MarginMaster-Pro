@@ -1,7 +1,7 @@
 /* ========================================
-   MARGINAXIS GLOBAL - ENGINE
-   Reverse Profit Engineering • Real-Time Forex
-   Pentagon Integration v3.0
+   MARGINAXIS GLOBAL - ENGINE v3.0
+   Reverse Engineering • Stress Testing • PDF Reports
+   Pentagon Integration • Mobile Optimized
    ======================================== */
 
 // ===== GLOBAL STATE =====
@@ -9,24 +9,17 @@ let paisActual = getPaisActual();
 let configPais = getConfigPais(paisActual);
 let forexRates = {};
 let chartBreakeven = null;
+let stressFactors = { devaluacion: 0, costos: 0, demanda: 0 };
 
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 MarginAxis Global initializing...');
+    console.log('🚀 MarginAxis Global v3.0 initializing...');
     
-    // Load saved country
     cargarPaisGuardado();
-    
-    // Load forex rates
     cargarForex();
-    
-    // Configure events
     configurarEventos();
-    
-    // Initial calculation
+    configurarStressTest();
     calcular();
-    
-    // Check Pentagon connections
     verificarConexionesPentagon();
     
     console.log('✓ MarginAxis Global ready');
@@ -34,28 +27,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ===== EVENT CONFIGURATION =====
 function configurarEventos() {
-    // Country selector
     document.getElementById('paisSelector').addEventListener('change', cambiarPais);
     
-    // Import toggle
     document.getElementById('esImportado').addEventListener('change', toggleImportacion);
     document.getElementById('codigoHS').addEventListener('input', buscarArancel);
     
-    // Cost inputs
-    document.getElementById('costoCompra').addEventListener('input', calcular);
-    document.getElementById('packaging').addEventListener('input', calcular);
-    document.getElementById('logistica').addEventListener('input', calcular);
-    document.getElementById('merma').addEventListener('input', calcular);
+    ['costoCompra', 'packaging', 'logistica', 'merma'].forEach(id => {
+        document.getElementById(id).addEventListener('input', calcular);
+    });
     
-    // Price
     document.getElementById('precioVenta').addEventListener('input', calcular);
-    
-    // Selectors
     document.getElementById('pasarela').addEventListener('change', calcular);
     document.getElementById('regimen').addEventListener('change', calcular);
     
-    // Reverse engineering
     document.getElementById('metaGanancia').addEventListener('input', calcular);
+    document.getElementById('salarioEmpleado').addEventListener('input', calcularEscalabilidad);
+    
+    document.getElementById('cacCliente').addEventListener('input', calcularLTVCAC);
+    document.getElementById('comprasPromedio').addEventListener('input', calcularLTVCAC);
 }
 
 // ===== COUNTRY MANAGEMENT =====
@@ -120,20 +109,16 @@ async function cargarForex() {
         const cached = localStorage.getItem(STORAGE_KEYS.forexCache);
         const cacheData = cached ? JSON.parse(cached) : null;
         
-        // Check if cache is recent (less than 1 hour)
         if (cacheData && (Date.now() - cacheData.timestamp < 3600000)) {
             forexRates = cacheData.rates;
             actualizarDisplayForex();
             return;
         }
         
-        // Fetch new rates
         const response = await fetch(FOREX_API.endpoint);
         const data = await response.json();
-        
         forexRates = data.rates;
         
-        // Cache the data
         localStorage.setItem(STORAGE_KEYS.forexCache, JSON.stringify({
             rates: forexRates,
             timestamp: Date.now()
@@ -142,7 +127,7 @@ async function cargarForex() {
         actualizarDisplayForex();
         
     } catch (error) {
-        console.warn('⚠️ Could not load forex rates, using defaults');
+        console.warn('⚠️ Forex offline, using defaults');
         forexRates = {};
         actualizarDisplayForex();
     }
@@ -151,17 +136,14 @@ async function cargarForex() {
 function actualizarDisplayForex() {
     const rate = forexRates[configPais.moneda] || FOREX_API.defaultRates[paisActual];
     document.getElementById('infoForex').textContent = `1 USD = ${configPais.simbolo}${rate.toFixed(2)}`;
-    calcular(); // Recalculate with new rates
+    calcular();
 }
 
 // ===== IMPORT TOGGLE =====
 function toggleImportacion() {
     const esImportado = document.getElementById('esImportado').checked;
     document.getElementById('seccionAduanas').style.display = esImportado ? 'block' : 'none';
-    
-    if (esImportado) {
-        buscarArancel();
-    }
+    if (esImportado) buscarArancel();
     calcular();
 }
 
@@ -170,7 +152,7 @@ function buscarArancel() {
     const infoEl = document.getElementById('infoArancel');
     
     if (!codigo) {
-        infoEl.textContent = 'Ingresa un código HS';
+        infoEl.textContent = 'Ingresa código HS';
         return;
     }
     
@@ -181,28 +163,82 @@ function buscarArancel() {
         infoEl.textContent = `Ad Valorem: ${porcentaje}% - ${arancel.descripcion}`;
         infoEl.style.color = '#10b981';
     } else {
-        infoEl.textContent = `Código no encontrado - usando promedio: 11%`;
+        infoEl.textContent = `No encontrado - usando 11%`;
         infoEl.style.color = '#f59e0b';
     }
     
     calcular();
 }
 
+// ===== STRESS TESTING CONFIGURATION =====
+function configurarStressTest() {
+    const sliderDevaluacion = document.getElementById('sliderDevaluacion');
+    const sliderCostos = document.getElementById('sliderCostos');
+    const sliderDemanda = document.getElementById('sliderDemanda');
+    
+    sliderDevaluacion.addEventListener('input', function() {
+        stressFactors.devaluacion = parseFloat(this.value);
+        document.getElementById('labelDevaluacion').textContent = `${this.value}%`;
+        aplicarStressTest();
+    });
+    
+    sliderCostos.addEventListener('input', function() {
+        stressFactors.costos = parseFloat(this.value);
+        document.getElementById('labelCostos').textContent = `+${this.value}%`;
+        aplicarStressTest();
+    });
+    
+    sliderDemanda.addEventListener('input', function() {
+        stressFactors.demanda = parseFloat(this.value);
+        document.getElementById('labelDemanda').textContent = `-${this.value}%`;
+        aplicarStressTest();
+    });
+}
+
+function aplicarStressTest() {
+    calcular();
+    
+    const totalStress = Math.abs(stressFactors.devaluacion) + stressFactors.costos + stressFactors.demanda;
+    let mensaje = '';
+    
+    if (totalStress === 0) {
+        mensaje = 'Escenario normal';
+    } else if (totalStress < 30) {
+        mensaje = '⚠️ Crisis leve - Ajustes menores necesarios';
+    } else if (totalStress < 60) {
+        mensaje = '🔥 Crisis moderada - Revisar estrategia';
+    } else {
+        mensaje = '💀 Crisis severa - Reestructuración urgente';
+    }
+    
+    document.getElementById('mensajeStress').textContent = mensaje;
+}
+
 // ===== MAIN CALCULATION ENGINE =====
 function calcular() {
-    // 1. GET VALUES
-    const costoCompra = parseFloat(document.getElementById('costoCompra').value) || 0;
-    const packaging = parseFloat(document.getElementById('packaging').value) || 0;
-    const logistica = parseFloat(document.getElementById('logistica').value) || 0;
+    let costoCompra = parseFloat(document.getElementById('costoCompra').value) || 0;
+    let packaging = parseFloat(document.getElementById('packaging').value) || 0;
+    let logistica = parseFloat(document.getElementById('logistica').value) || 0;
     const merma = parseFloat(document.getElementById('merma').value) || 0;
-    const precioVenta = parseFloat(document.getElementById('precioVenta').value) || 0;
+    let precioVenta = parseFloat(document.getElementById('precioVenta').value) || 0;
     const metaGanancia = parseFloat(document.getElementById('metaGanancia').value) || 0;
     
     const pasarelaKey = document.getElementById('pasarela').value;
     const regimenKey = document.getElementById('regimen').value;
     const esImportado = document.getElementById('esImportado').checked;
     
-    // 2. IMPORT COSTS
+    // APPLY STRESS FACTORS
+    if (stressFactors.costos > 0) {
+        costoCompra *= (1 + stressFactors.costos / 100);
+        packaging *= (1 + stressFactors.costos / 100);
+        logistica *= (1 + stressFactors.costos / 100);
+    }
+    
+    if (stressFactors.devaluacion !== 0 && esImportado) {
+        costoCompra *= (1 + stressFactors.devaluacion / 100);
+    }
+    
+    // IMPORT COSTS
     let costoImportacion = 0;
     if (esImportado) {
         const codigo = document.getElementById('codigoHS').value.trim();
@@ -210,14 +246,14 @@ function calcular() {
         costoImportacion = costoCompra * arancel.adValorem;
     }
     
-    // 3. TOTAL COST
+    // TOTAL COST
     const costoBase = costoCompra + packaging + logistica + costoImportacion;
     const costoMerma = costoBase * (merma / 100);
     const costoTotalUnitario = costoBase + costoMerma;
     
     document.getElementById('costoTotalUnitario').textContent = formatearMonedaPais(costoTotalUnitario, paisActual);
     
-    // 4. PAYMENT GATEWAY COMMISSION
+    // PAYMENT GATEWAY COMMISSION
     const pasarela = configPais.pasarelas[pasarelaKey];
     let comisionPasarela = (precioVenta * pasarela.comision) + pasarela.fijo;
     
@@ -227,9 +263,9 @@ function calcular() {
     
     document.getElementById('comisionPasarela').textContent = formatearMonedaPais(comisionPasarela, paisActual);
     const porcentajeComision = precioVenta > 0 ? (comisionPasarela / precioVenta * 100) : 0;
-    document.getElementById('detallePasarela').textContent = `${porcentajeComision.toFixed(2)}% del precio`;
+    document.getElementById('detallePasarela').textContent = `${porcentajeComision.toFixed(2)}%`;
     
-    // 5. TAXES
+    // TAXES
     const regimen = configPais.regimenes[regimenKey];
     let montoIVA = 0;
     let montoRenta = 0;
@@ -249,33 +285,36 @@ function calcular() {
     document.getElementById('montoRenta').textContent = formatearMonedaPais(montoRenta, paisActual);
     document.getElementById('totalImpuestos').textContent = formatearMonedaPais(totalImpuestos, paisActual);
     
-    // 6. PROFIT CALCULATIONS
+    // PROFIT CALCULATIONS
     const gananciaBruta = precioVenta - costoTotalUnitario;
     const totalCostos = costoTotalUnitario + comisionPasarela + totalImpuestos;
-    const gananciaNeta = precioVenta - totalCostos;
+    let gananciaNeta = precioVenta - totalCostos;
+    
+    // Apply demand factor
+    if (stressFactors.demanda > 0) {
+        gananciaNeta *= (1 - stressFactors.demanda / 100);
+    }
     
     document.getElementById('gananciaBruta').textContent = formatearMonedaPais(gananciaBruta, paisActual);
     document.getElementById('totalCostos').textContent = formatearMonedaPais(totalCostos, paisActual);
     document.getElementById('gananciaNeta').textContent = formatearMonedaPais(gananciaNeta, paisActual);
     document.getElementById('enBolsillo').textContent = formatearMonedaPais(gananciaNeta, paisActual);
     
-    // 7. NET MARGIN
+    // NET MARGIN
     const margenNeto = precioVenta > 0 ? (gananciaNeta / precioVenta * 100) : 0;
     
-    // 8. TRAFFIC LIGHT
+    // UPDATE UI COMPONENTS
     actualizarSemaforo(margenNeto);
-    
-    // 9. MULTI-CURRENCY DISPLAY
     actualizarMultiCurrency(gananciaNeta);
-    
-    // 10. REVERSE PROFIT ENGINEERING
     calcularReverseProfitEngineering(gananciaNeta, metaGanancia, costoTotalUnitario);
-    
-    // 11. BREAK-EVEN CHART
     actualizarGraficoBreakeven(costoTotalUnitario, gananciaNeta, precioVenta);
-    
-    // 12. UPDATE FISCAL INFO
     actualizarInfoFiscal();
+    calcularEscalabilidad();
+    calcularLTVCAC();
+    
+    // STRESS TEST DISPLAY
+    document.getElementById('margenStress').textContent = `${margenNeto.toFixed(1)}%`;
+    document.getElementById('margenStress').style.color = margenNeto >= 30 ? '#10b981' : margenNeto >= 15 ? '#f59e0b' : '#dc2626';
 }
 
 // ===== TRAFFIC LIGHT =====
@@ -290,7 +329,7 @@ function actualizarSemaforo(margenNeto) {
     else if (margenNeto < TRAFFIC_LIGHT.yellow.max) estado = TRAFFIC_LIGHT.yellow;
     else estado = TRAFFIC_LIGHT.green;
     
-    card.className = 'obsidian-card p-8 slide-in traffic-light-container ' + estado.class;
+    card.className = 'obsidian-card p-6 md:p-8 slide-in traffic-light-container ' + estado.class;
     icon.textContent = estado.icon;
     display.textContent = `${margenNeto.toFixed(1)}%`;
     display.style.color = estado.color;
@@ -317,24 +356,66 @@ function calcularReverseProfitEngineering(gananciaNetaActual, metaGanancia, cost
         return;
     }
     
-    // Calculate units needed
     const unidadesRequeridas = Math.ceil(metaGanancia / gananciaNetaActual);
     const ventasDiarias = (unidadesRequeridas / CALCULOS.diasLaborablesMes).toFixed(1);
     
     document.getElementById('unidadesRequeridas').textContent = unidadesRequeridas.toLocaleString('es');
     document.getElementById('ventasDiarias').textContent = `≈ ${ventasDiarias} ventas/día`;
     
-    // Calculate minimum suggested price
     const precioActual = parseFloat(document.getElementById('precioVenta').value) || 0;
     const margenActual = precioActual > 0 ? (gananciaNetaActual / precioActual) : 0;
     
     if (margenActual > 0) {
-        const ventasMensualesActuales = metaGanancia / gananciaNetaActual;
         const precioSugerido = costoTotal / (1 - margenActual);
         document.getElementById('precioSugerido').textContent = formatearMonedaPais(precioSugerido, paisActual);
     } else {
         document.getElementById('precioSugerido').textContent = formatearMonedaPais(costoTotal * 1.5, paisActual);
     }
+}
+
+// ===== SCALABILITY ANALYSIS =====
+function calcularEscalabilidad() {
+    const salarioEmpleado = parseFloat(document.getElementById('salarioEmpleado').value) || 0;
+    const gananciaNetaEl = document.getElementById('gananciaNeta');
+    const gananciaNeta = parseFloat(gananciaNetaEl.textContent.replace(/[^\d.,-]/g, '').replace(',', '.')) || 0;
+    
+    if (gananciaNeta <= 0) {
+        document.getElementById('ventasExtraEmpleado').textContent = '∞';
+        return;
+    }
+    
+    const ventasExtra = Math.ceil(salarioEmpleado / gananciaNeta);
+    document.getElementById('ventasExtraEmpleado').textContent = ventasExtra.toLocaleString('es');
+}
+
+// ===== LTV vs CAC OPTIMIZER =====
+function calcularLTVCAC() {
+    const cac = parseFloat(document.getElementById('cacCliente').value) || 0;
+    const comprasAnuales = parseFloat(document.getElementById('comprasPromedio').value) || 1;
+    const gananciaNetaEl = document.getElementById('gananciaNeta');
+    const gananciaNeta = parseFloat(gananciaNetaEl.textContent.replace(/[^\d.,-]/g, '').replace(',', '.')) || 0;
+    
+    const ltv = gananciaNeta * comprasAnuales * 3;
+    
+    if (cac === 0) {
+        document.getElementById('ratioLTVCAC').textContent = '∞:1';
+        document.getElementById('mensajeLTVCAC').textContent = 'Sin costo de adquisición';
+        return;
+    }
+    
+    const ratio = ltv / cac;
+    document.getElementById('ratioLTVCAC').textContent = `${ratio.toFixed(1)}:1`;
+    
+    let mensaje = '';
+    if (ratio >= 3) {
+        mensaje = '✅ Excelente - CAC muy rentable';
+    } else if (ratio >= 1) {
+        mensaje = '⚠️ Aceptable - Optimiza tu CAC';
+    } else {
+        mensaje = '❌ Crítico - Pierdes dinero por cliente';
+    }
+    
+    document.getElementById('mensajeLTVCAC').textContent = mensaje;
 }
 
 // ===== BREAK-EVEN CHART =====
@@ -354,7 +435,7 @@ function actualizarGraficoBreakeven(costoTotal, gananciaNeta, precioVenta) {
             labels: unidades,
             datasets: [
                 {
-                    label: 'Costos Totales',
+                    label: 'Costos',
                     data: costos,
                     borderColor: '#dc2626',
                     backgroundColor: 'rgba(220, 38, 38, 0.1)',
@@ -362,7 +443,7 @@ function actualizarGraficoBreakeven(costoTotal, gananciaNeta, precioVenta) {
                     tension: 0.4
                 },
                 {
-                    label: 'Ventas Brutas',
+                    label: 'Ventas',
                     data: ventas,
                     borderColor: '#06b6d4',
                     backgroundColor: 'rgba(6, 182, 212, 0.1)',
@@ -370,7 +451,7 @@ function actualizarGraficoBreakeven(costoTotal, gananciaNeta, precioVenta) {
                     tension: 0.4
                 },
                 {
-                    label: 'Ganancia Neta',
+                    label: 'Ganancia',
                     data: ganancias,
                     borderColor: '#10b981',
                     backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -384,7 +465,7 @@ function actualizarGraficoBreakeven(costoTotal, gananciaNeta, precioVenta) {
             maintainAspectRatio: true,
             plugins: {
                 legend: {
-                    labels: { color: '#e2e8f0', font: { size: 11 } }
+                    labels: { color: '#e2e8f0', font: { size: 10 } }
                 },
                 tooltip: {
                     backgroundColor: 'rgba(2, 6, 23, 0.95)',
@@ -395,38 +476,168 @@ function actualizarGraficoBreakeven(costoTotal, gananciaNeta, precioVenta) {
             scales: {
                 y: {
                     beginAtZero: true,
-                    ticks: { color: '#94a3b8' },
+                    ticks: { color: '#94a3b8', font: { size: 10 } },
                     grid: { color: 'rgba(148, 163, 184, 0.1)' }
                 },
                 x: {
-                    ticks: { color: '#94a3b8' },
+                    ticks: { color: '#94a3b8', font: { size: 10 } },
                     grid: { color: 'rgba(148, 163, 184, 0.1)' }
                 }
             }
         }
     });
     
-    // Calculate break-even
-    const breakeven = costoTotal > 0 ? Math.ceil(costoTotal / (precioVenta - costoTotal)) : 0;
+    const breakeven = precioVenta > costoTotal ? Math.ceil(costoTotal / (precioVenta - costoTotal)) : 0;
     document.getElementById('unidadesBreakeven').textContent = breakeven;
+}
+
+// ===== PDF EXPORT =====
+function exportarPDF() {
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        const producto = document.getElementById('nombreProducto').value || 'Producto';
+        const precio = document.getElementById('precioVenta').value;
+        const margen = document.getElementById('margenNeto').textContent;
+        const ganancia = document.getElementById('gananciaNeta').textContent;
+        const costo = document.getElementById('costoTotalUnitario').textContent;
+        
+        doc.setFontSize(20);
+        doc.setTextColor(16, 185, 129);
+        doc.text('MarginAxis Global', 105, 20, { align: 'center' });
+        
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        doc.text('Reporte de Rentabilidad', 105, 30, { align: 'center' });
+        
+        doc.setFontSize(12);
+        doc.text(`Producto: ${producto}`, 20, 50);
+        doc.text(`País: ${configPais.nombre}`, 20, 60);
+        doc.text(`Fecha: ${new Date().toLocaleDateString('es')}`, 20, 70);
+        
+        doc.setFontSize(14);
+        doc.setTextColor(16, 185, 129);
+        doc.text('Datos Financieros', 20, 90);
+        
+        doc.setFontSize(11);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Precio de Venta: ${formatearMonedaPais(parseFloat(precio), paisActual)}`, 20, 100);
+        doc.text(`Costo Total: ${costo}`, 20, 110);
+        doc.text(`Ganancia Neta: ${ganancia}`, 20, 120);
+        doc.text(`Margen Neto: ${margen}`, 20, 130);
+        
+        if (stressFactors.devaluacion !== 0 || stressFactors.costos !== 0 || stressFactors.demanda !== 0) {
+            doc.setFontSize(14);
+            doc.setTextColor(220, 38, 38);
+            doc.text('Análisis de Estrés Aplicado', 20, 150);
+            
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Devaluación: ${stressFactors.devaluacion}%`, 20, 160);
+            doc.text(`Aumento Costos: ${stressFactors.costos}%`, 20, 170);
+            doc.text(`Caída Demanda: ${stressFactors.demanda}%`, 20, 180);
+        }
+        
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        doc.text('MarginAxis Global - Enterprise Profit Intelligence', 105, 280, { align: 'center' });
+        doc.text('Golden Commerce Ecosystem v3.0', 105, 285, { align: 'center' });
+        
+        doc.save(`MarginAxis_${producto}_${new Date().getTime()}.pdf`);
+        mostrarNotificacion('PDF generado exitosamente', 'success');
+        
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        mostrarNotificacion('Error al generar PDF', 'error');
+    }
+}
+
+// ===== CSV EXPORT =====
+function exportarCSV() {
+    const producto = document.getElementById('nombreProducto').value || 'Producto';
+    const precio = document.getElementById('precioVenta').value;
+    const costo = document.getElementById('costoTotalUnitario').textContent;
+    const margen = document.getElementById('margenNeto').textContent;
+    const ganancia = document.getElementById('gananciaNeta').textContent;
+    
+    const csv = [
+        ['Campo', 'Valor'],
+        ['Producto', producto],
+        ['País', configPais.nombre],
+        ['Precio Venta', precio],
+        ['Costo Total', costo],
+        ['Margen Neto', margen],
+        ['Ganancia Neta', ganancia],
+        ['Fecha', new Date().toLocaleDateString('es')]
+    ].map(row => row.join(',')).join('\n');
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `MarginAxis_${producto}_${new Date().getTime()}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    
+    mostrarNotificacion('CSV exportado', 'success');
+}
+
+// ===== SHARE RESULTS =====
+function compartirResultados() {
+    const texto = `📊 Análisis MarginAxis Global
+Producto: ${document.getElementById('nombreProducto').value}
+Margen Neto: ${document.getElementById('margenNeto').textContent}
+Ganancia: ${document.getElementById('gananciaNeta').textContent}
+
+🚀 Analiza tu rentabilidad en margin-master-pro.vercel.app`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'MarginAxis Global',
+            text: texto
+        }).then(() => {
+            mostrarNotificacion('Compartido exitosamente', 'success');
+        }).catch(() => {});
+    } else {
+        navigator.clipboard.writeText(texto).then(() => {
+            mostrarNotificacion('Copiado al portapapeles', 'success');
+        });
+    }
+}
+
+// ===== PRODUCT SAVE/LOAD =====
+function guardarProducto() {
+    const producto = {
+        id: Date.now(),
+        nombre: document.getElementById('nombreProducto').value || 'Sin nombre',
+        precio: parseFloat(document.getElementById('precioVenta').value) || 0,
+        costo: parseFloat(document.getElementById('costoTotalUnitario').textContent.replace(/[^\d.,-]/g, '').replace(',', '.')) || 0,
+        margen: parseFloat(document.getElementById('margenNeto').textContent.replace('%', '')) || 0,
+        pais: paisActual,
+        fecha: new Date().toISOString()
+    };
+    
+    let productos = JSON.parse(localStorage.getItem(STORAGE_KEYS.productos) || '[]');
+    productos.push(producto);
+    localStorage.setItem(STORAGE_KEYS.productos, JSON.stringify(productos));
+    
+    mostrarNotificacion('Producto guardado correctamente', 'success');
 }
 
 // ===== PENTAGON INTEGRATION =====
 async function verificarConexionesPentagon() {
     const links = window.PENTAGON_LINKS;
     
-    // Update navigation links
     document.getElementById('linkSueldoPro').href = links.sueldopro;
     document.getElementById('linkLiquidez').href = links.liquidez;
     document.getElementById('linkLeadTarget').href = links.leadtarget;
     document.getElementById('linkWealth').href = links.wealth;
     
-    // Check if we can fetch data (this would require CORS support from other apps)
-    // For now, we just show "ready to sync"
-    document.getElementById('syncSueldoPro').textContent = 'Listo para sincronizar';
-    document.getElementById('syncLeadTarget').textContent = 'Listo para sincronizar';
-    document.getElementById('syncLiquidez').textContent = 'Listo para sincronizar';
-    document.getElementById('syncWealth').textContent = 'Listo para sincronizar';
+    document.getElementById('syncSueldoPro').textContent = 'Listo';
+    document.getElementById('syncLeadTarget').textContent = 'Listo';
+    document.getElementById('syncLiquidez').textContent = 'Listo';
+    document.getElementById('syncWealth').textContent = 'Listo';
 }
 
 // ===== SIMULATOR FUNCTIONS =====
@@ -435,7 +646,7 @@ function simularCambio(porcentaje) {
     const nuevoPrecio = precioActual * (1 + porcentaje / 100);
     document.getElementById('precioVenta').value = nuevoPrecio.toFixed(2);
     calcular();
-    mostrarNotificacion(`Precio ${porcentaje > 0 ? 'aumentado' : 'reducido'} en ${Math.abs(porcentaje)}%`);
+    mostrarNotificacion(`Precio ${porcentaje > 0 ? 'aumentado' : 'reducido'} ${Math.abs(porcentaje)}%`);
 }
 
 function resetearValores() {
@@ -446,6 +657,16 @@ function resetearValores() {
     document.getElementById('precioVenta').value = 250.00;
     document.getElementById('metaGanancia').value = 10000;
     document.getElementById('esImportado').checked = false;
+    
+    // Reset stress sliders
+    document.getElementById('sliderDevaluacion').value = 0;
+    document.getElementById('sliderCostos').value = 0;
+    document.getElementById('sliderDemanda').value = 0;
+    stressFactors = { devaluacion: 0, costos: 0, demanda: 0 };
+    document.getElementById('labelDevaluacion').textContent = '0%';
+    document.getElementById('labelCostos').textContent = '0%';
+    document.getElementById('labelDemanda').textContent = '0%';
+    
     toggleImportacion();
     calcular();
     mostrarNotificacion('Valores reseteados');
@@ -465,13 +686,15 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
         position: fixed;
         top: 80px;
         right: 20px;
-        background: ${tipo === 'success' ? '#10b981' : tipo === 'warning' ? '#f59e0b' : '#06b6d4'};
+        background: ${tipo === 'success' ? '#10b981' : tipo === 'warning' ? '#f59e0b' : tipo === 'error' ? '#dc2626' : '#06b6d4'};
         color: white;
         padding: 1rem 1.5rem;
         border-radius: 0.75rem;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         z-index: 9999;
         font-weight: 600;
+        font-size: 0.875rem;
+        max-width: 90%;
         animation: slideInRight 0.3s ease-out;
     `;
     
@@ -482,7 +705,7 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
     }, 3000);
 }
 
-// Add animation styles
+// Animation styles
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
@@ -496,7 +719,9 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-console.log('✓ MarginAxis Global Engine loaded');
-console.log('🌍 Multi-country system active');
+console.log('✓ MarginAxis Global Engine v3.0 loaded');
+console.log('🌍 21-country system active');
 console.log('💱 Real-time Forex enabled');
+console.log('🔥 Stress Testing ready');
+console.log('📄 PDF Reports enabled');
 console.log('⬡ Pentagon Bridge connected');

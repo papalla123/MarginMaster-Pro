@@ -440,6 +440,8 @@ function convertirAEUR(valor, paisCodigo, forexRates) {
     return valorUSD * eurRate;
 }
 
-console.log('✓ MarginAxis Global Database loaded');
+console.log('✓ MarginAxis Global Database v3.0 loaded');
 console.log('🌍 Countries configured:', Object.keys(PAISES).length);
 console.log('⬡ Pentagon Bridge initialized');
+console.log('🔥 Stress Testing ready');
+console.log('📊 Advanced analytics enabled');

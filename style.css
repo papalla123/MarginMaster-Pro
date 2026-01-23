@@ -1,6 +1,7 @@
 /* ========================================
    MARGINAXIS GLOBAL - OBSIDIAN ELITE THEME
    Enterprise Profit Intelligence v3.0
+   Mobile-First Optimized
    ======================================== */
 
 /* ===== RESET & BASE ===== */
@@ -9,6 +10,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -16,6 +18,7 @@ body {
     min-height: 100vh;
     color: #e2e8f0;
     overflow-x: hidden;
+    touch-action: pan-y;
 }
 
 /* ===== PENTAGON NAVIGATION ===== */
@@ -80,7 +83,7 @@ body {
 
 /* ===== HERO SECTION ===== */
 .hero-section {
-    padding: 2rem 0;
+    padding: 1rem 0;
 }
 
 .gradient-text {
@@ -123,13 +126,13 @@ body {
 
 .obsidian-card:hover {
     border-color: rgba(16, 185, 129, 0.4);
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow: 
-        0 12px 50px rgba(16, 185, 129, 0.2),
+        0 8px 40px rgba(16, 185, 129, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* ===== INPUTS OBSIDIAN STYLE ===== */
+/* ===== INPUTS OBSIDIAN STYLE (Mobile Optimized) ===== */
 .input-obsidian {
     background: rgba(2, 6, 23, 0.8);
     backdrop-filter: blur(10px);
@@ -142,6 +145,7 @@ body {
     font-weight: 600;
     transition: all 0.3s ease;
     outline: none;
+    min-height: 48px; /* Touch-friendly */
 }
 
 .input-obsidian:focus {
@@ -150,7 +154,7 @@ body {
     box-shadow: 
         0 0 0 4px rgba(16, 185, 129, 0.15),
         0 4px 20px rgba(16, 185, 129, 0.3);
-    transform: scale(1.02);
+    transform: scale(1.01);
 }
 
 .input-obsidian::placeholder {
@@ -175,7 +179,8 @@ body {
     position: relative;
     display: inline-block;
     width: 50px;
-    height: 24px;
+    height: 28px;
+    min-width: 50px; /* Prevent shrinking on mobile */
 }
 
 .switch input {
@@ -193,15 +198,15 @@ body {
     bottom: 0;
     background: rgba(71, 85, 105, 0.5);
     transition: 0.4s;
-    border-radius: 24px;
+    border-radius: 28px;
     border: 2px solid rgba(148, 163, 184, 0.3);
 }
 
 .slider-obsidian:before {
     position: absolute;
     content: "";
-    height: 16px;
-    width: 16px;
+    height: 20px;
+    width: 20px;
     left: 2px;
     bottom: 2px;
     background: white;
@@ -215,7 +220,38 @@ input:checked + .slider-obsidian {
 }
 
 input:checked + .slider-obsidian:before {
-    transform: translateX(26px);
+    transform: translateX(22px);
+}
+
+/* ===== STRESS TEST SLIDERS ===== */
+.slider-stress {
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: rgba(71, 85, 105, 0.3);
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.slider-stress::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.slider-stress::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    border: none;
 }
 
 /* ===== LABELS & SECTIONS ===== */
@@ -233,10 +269,10 @@ input:checked + .slider-obsidian:before {
 }
 
 .section-title {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 700;
     color: white;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     letter-spacing: -0.025em;
@@ -247,7 +283,7 @@ input:checked + .slider-obsidian:before {
     background: rgba(2, 6, 23, 0.6);
     border: 1px solid rgba(16, 185, 129, 0.2);
     border-radius: 1rem;
-    padding: 1rem;
+    padding: 0.75rem;
     text-align: center;
     transition: all 0.3s ease;
 }
@@ -275,7 +311,7 @@ input:checked + .slider-obsidian:before {
 }
 
 .result-box-obsidian:hover {
-    transform: scale(1.02);
+    transform: scale(1.01);
     border-color: rgba(16, 185, 129, 0.4);
 }
 
@@ -296,15 +332,16 @@ input:checked + .slider-obsidian:before {
 }
 
 .btn-sim {
-    padding: 0.625rem 1rem;
+    padding: 0.625rem 0.875rem;
     border-radius: 0.75rem;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: white;
     border: none;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    min-height: 44px; /* Touch-friendly */
 }
 
 .btn-sim:hover {
@@ -314,6 +351,33 @@ input:checked + .slider-obsidian:before {
 
 .btn-sim:active {
     transform: translateY(0) scale(0.98);
+}
+
+/* ===== ACTION BUTTONS ===== */
+.btn-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    border: none;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    min-height: 80px;
+}
+
+.btn-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.btn-action:active {
+    transform: translateY(-1px);
 }
 
 /* ===== TRAFFIC LIGHT ===== */
@@ -349,8 +413,8 @@ input:checked + .slider-obsidian:before {
 /* ===== PENTAGON SYNC ===== */
 .pentagon-sync {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
 }
 
 .sync-item {
@@ -394,7 +458,7 @@ input:checked + .slider-obsidian:before {
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -403,7 +467,7 @@ input:checked + .slider-obsidian:before {
 }
 
 .slide-in {
-    animation: slideIn 0.6s ease-out forwards;
+    animation: slideIn 0.5s ease-out forwards;
 }
 
 /* ===== CHART CONTAINER ===== */
@@ -418,7 +482,7 @@ input:checked + .slider-obsidian:before {
 .footer-section {
     background: rgba(2, 6, 23, 0.95);
     border-top: 1px solid rgba(16, 185, 129, 0.2);
-    margin-top: 4rem;
+    margin-top: 3rem;
 }
 
 .footer-link {
@@ -436,18 +500,18 @@ input:checked + .slider-obsidian:before {
 
 /* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
     background: rgba(2, 6, 23, 0.5);
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.6) 0%, rgba(6, 182, 212, 0.6) 100%);
-    border-radius: 5px;
+    border-radius: 4px;
     border: 2px solid rgba(2, 6, 23, 0.5);
 }
 
@@ -477,33 +541,132 @@ select.input-obsidian option {
     padding: 0 1rem 2rem 1rem;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    .hero-section {
-        padding: 1rem 0;
-    }
-    
+/* ===== RESPONSIVE - TABLET ===== */
+@media (max-width: 1024px) {
     .section-title {
-        font-size: 1.125rem;
+        font-size: 1rem;
     }
     
-    .gradient-text {
-        font-size: 2rem;
+    .pentagon-sync {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 640px) {
+/* ===== RESPONSIVE - MOBILE ===== */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 0.5rem 0;
+    }
+    
+    .obsidian-card {
+        border-radius: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+    }
+    
     .input-obsidian {
-        font-size: 0.875rem;
+        font-size: 1rem;
         padding: 0.75rem 0.875rem;
     }
     
     .btn-sim {
-        font-size: 0.75rem;
-        padding: 0.5rem 0.75rem;
+        font-size: 0.7rem;
+        padding: 0.5rem 0.625rem;
+    }
+    
+    .currency-display {
+        padding: 0.5rem;
+    }
+    
+    .chart-container {
+        padding: 0.5rem;
+    }
+}
+
+/* ===== RESPONSIVE - SMALL MOBILE ===== */
+@media (max-width: 640px) {
+    .input-obsidian {
+        font-size: 0.875rem;
+    }
+    
+    .btn-sim {
+        font-size: 0.65rem;
+        padding: 0.5rem;
+        min-height: 40px;
+    }
+    
+    .btn-action {
+        min-height: 70px;
+        padding: 0.75rem;
     }
     
     .pentagon-sync {
         grid-template-columns: 1fr;
+    }
+    
+    .sync-item {
+        padding: 0.5rem;
+    }
+}
+
+/* ===== TOUCH IMPROVEMENTS ===== */
+@media (hover: none) and (pointer: coarse) {
+    .obsidian-card:hover {
+        transform: none;
+    }
+    
+    .input-obsidian:focus {
+        transform: none;
+    }
+    
+    .btn-sim:hover {
+        transform: none;
+    }
+    
+    .btn-action:hover {
+        transform: none;
+    }
+}
+
+/* ===== LANDSCAPE MOBILE ===== */
+@media (max-width: 896px) and (orientation: landscape) {
+    .hero-section {
+        padding: 0.5rem 0;
+    }
+    
+    .obsidian-card {
+        padding: 0.75rem !important;
+    }
+}
+
+/* ===== UTILITIES ===== */
+.text-shadow-gold {
+    text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+}
+
+.border-glow {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .pentagon-nav,
+    .footer-section,
+    .btn-sim,
+    .btn-action {
+        display: none;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .obsidian-card {
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
     }
 }
