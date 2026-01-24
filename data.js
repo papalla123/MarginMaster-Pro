@@ -18,13 +18,13 @@ window.PENTAGON_LINKS = {
         icon: '📊',
         color: 'from-green-500 to-emerald-500'
     },
-    leadnexus: {
-        name: 'LeadNexus AI',
-        url: 'https://lead-target.vercel.app', 
+    leadtarget: {
+        name: 'Lead Nexus AI',
+        url: 'https://lead-target-rpvx.vercel.app', 
         icon: '🎯',
         color: 'from-violet-500 to-fuchsia-500'
     },
-    liquidezforce: {
+    liquidez: {
         name: 'Liquidez Force',
         url: 'https://liquidez-force.vercel.app',
         icon: '💰',
