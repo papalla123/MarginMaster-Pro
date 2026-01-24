@@ -4,13 +4,38 @@
    Enterprise Intelligence v3.0
    ======================================== */
 
-// ===== PENTAGON LINKS (Centralized Navigation) =====
+// ===== PENTAGON LINKS (Sincronización Global 2026) =====
 window.PENTAGON_LINKS = {
-    marginaxis: 'https://marginaxis-global.vercel.app',
-    sueldopro: 'https://sueldopro-2026.vercel.app',
-    liquidez: 'https://liquidez-force.vercel.app',
-    leadtarget: 'https://lead-target-rpvx.vercel.app',
-    wealth: 'https://wealth-armor-ai.vercel.app'
+    sueldopro: {
+        name: 'SueldoPro Ultra',
+        url: 'https://sueldopro-2026.vercel.app',
+        icon: '💼',
+        color: 'from-blue-500 to-cyan-500'
+    },
+    marginaxis: {
+        name: 'MarginAxis Global',
+        url: 'https://margin-master-pro-pboy.vercel.app',
+        icon: '📊',
+        color: 'from-green-500 to-emerald-500'
+    },
+    leadnexus: {
+        name: 'LeadNexus AI',
+        url: 'https://lead-target.vercel.app', 
+        icon: '🎯',
+        color: 'from-violet-500 to-fuchsia-500'
+    },
+    liquidezforce: {
+        name: 'Liquidez Force',
+        url: 'https://liquidez-force.vercel.app',
+        icon: '💰',
+        color: 'from-yellow-500 to-orange-500'
+    },
+    wealth: {
+        name: 'Wealth Armor AI',
+        url: 'https://wealth-armor-ai.vercel.app',
+        icon: '🛡️',
+        color: 'from-emerald-500 to-green-600'
+    }
 };
 
 // ===== GLOBAL COUNTRY CONFIGURATION (21 Countries) =====
