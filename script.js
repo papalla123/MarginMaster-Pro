@@ -3,7 +3,20 @@
    Reverse Engineering • Stress Testing • PDF Reports
    Pentagon Integration • Mobile Optimized
    ======================================== */
-
+// ===== PENTAGON INTEGRATION =====
+async function verificarConexionesPentagon() {
+    const links = window.PENTAGON_LINKS;
+    
+    document.getElementById('linkSueldoPro').href = links.sueldopro.url;
+    document.getElementById('linkLiquidez').href = links.liquidez.url;
+    document.getElementById('linkLeadTarget').href = links.leadtarget.url;
+    document.getElementById('linkWealth').href = links.wealth.url;
+    
+    document.getElementById('syncSueldoPro').textContent = 'Listo';
+    document.getElementById('syncLeadTarget').textContent = 'Listo';
+    document.getElementById('syncLiquidez').textContent = 'Listo';
+    document.getElementById('syncWealth').textContent = 'Listo';
+}
 // ===== GLOBAL STATE =====
 let paisActual = getPaisActual();
 let configPais = getConfigPais(paisActual);
