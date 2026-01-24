@@ -19,8 +19,8 @@ window.PENTAGON_LINKS = {
         color: 'from-green-500 to-emerald-500'
     },
     leadtarget: {
-        name: 'Lead Nexus AI',
-        url: 'https://lead-target-rpvx.vercel.app', 
+        name: 'Lead Target',
+        url: 'https://lead-target.vercel.app', 
         icon: '🎯',
         color: 'from-violet-500 to-fuchsia-500'
     },
@@ -465,7 +465,7 @@ function convertirAEUR(valor, paisCodigo, forexRates) {
     return valorUSD * eurRate;
 }
 
-console.log('✓ MarginAxis Global Database v3.0 loaded');
+console.log('✔ MarginAxis Global Database v3.0 loaded');
 console.log('🌍 Countries configured:', Object.keys(PAISES).length);
 console.log('⬡ Pentagon Bridge initialized');
 console.log('🔥 Stress Testing ready');
