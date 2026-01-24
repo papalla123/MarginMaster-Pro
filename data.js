@@ -4,38 +4,13 @@
    Enterprise Intelligence v3.0
    ======================================== */
 
-// ===== PENTAGON LINKS (Sincronización Global 2026) =====
+// ===== PENTAGON LINKS (Centralized Navigation) =====
 window.PENTAGON_LINKS = {
-    sueldopro: {
-        name: 'SueldoPro Ultra',
-        url: 'https://sueldopro-2026.vercel.app',
-        icon: '💼',
-        color: 'from-blue-500 to-cyan-500'
-    },
-    marginaxis: {
-        name: 'MarginAxis Global',
-        url: 'https://margin-master-pro-pboy.vercel.app',
-        icon: '📊',
-        color: 'from-green-500 to-emerald-500'
-    },
-    leadtarget: {
-        name: 'Lead Target',
-        url: 'https://lead-target.vercel.app', 
-        icon: '🎯',
-        color: 'from-violet-500 to-fuchsia-500'
-    },
-    liquidez: {
-        name: 'Liquidez Force',
-        url: 'https://liquidez-force.vercel.app',
-        icon: '💰',
-        color: 'from-yellow-500 to-orange-500'
-    },
-    wealth: {
-        name: 'Wealth Armor AI',
-        url: 'https://wealth-armor-ai.vercel.app',
-        icon: '🛡️',
-        color: 'from-emerald-500 to-green-600'
-    }
+    marginaxis: 'https://marginaxis-global.vercel.app',
+    sueldopro: 'https://sueldopro-2026.vercel.app',
+    liquidez: 'https://liquidez-force.vercel.app',
+    leadtarget: 'https://lead-target-rpvx.vercel.app',
+    wealth: 'https://wealth-armor-ai.vercel.app'
 };
 
 // ===== GLOBAL COUNTRY CONFIGURATION (21 Countries) =====
@@ -465,7 +440,7 @@ function convertirAEUR(valor, paisCodigo, forexRates) {
     return valorUSD * eurRate;
 }
 
-console.log('✔ MarginAxis Global Database v3.0 loaded');
+console.log('✓ MarginAxis Global Database v3.0 loaded');
 console.log('🌍 Countries configured:', Object.keys(PAISES).length);
 console.log('⬡ Pentagon Bridge initialized');
 console.log('🔥 Stress Testing ready');

@@ -36,7 +36,7 @@
                     <a href="#" class="nav-link active">💎 MarginAxis</a>
                     <a href="https://sueldopro-2026.vercel.app" target="_blank" class="nav-link" id="linkSueldoPro">💼 SueldoPro</a>
                     <a href="https://liquidez-force.vercel.app" target="_blank" class="nav-link" id="linkLiquidez">💰 Liquidez</a>
-                    <a href="https://lead-target.vercel.app" target="_blank" class="nav-link" id="linkLeadTarget">🎯 LeadTarget</a>
+                    <a href="https://lead-target-rpvx.vercel.app" target="_blank" class="nav-link" id="linkLeadTarget">🎯 LeadTarget</a>
                     <a href="https://wealth-armor-ai.vercel.app" target="_blank" class="nav-link" id="linkWealth">🛡️ Wealth</a>
                 </div>
                 <button class="md:hidden text-white" onclick="toggleMobileMenu()">
@@ -52,7 +52,7 @@
                 <a href="#" class="mobile-nav-link">💎 MarginAxis Global</a>
                 <a href="https://sueldopro-2026.vercel.app" target="_blank" class="mobile-nav-link">💼 SueldoPro Ultra</a>
                 <a href="https://liquidez-force.vercel.app" target="_blank" class="mobile-nav-link">💰 Liquidez Force</a>
-                <a href="https://lead-target.vercel.app" target="_blank" class="mobile-nav-link">🎯 Lead Target</a>
+                <a href="https://lead-target-rpvx.vercel.app" target="_blank" class="mobile-nav-link">🎯 Lead Target</a>
                 <a href="https://wealth-armor-ai.vercel.app" target="_blank" class="mobile-nav-link">🛡️ Wealth Armor</a>
             </div>
         </div>
@@ -497,4 +497,106 @@
                             <span class="sync-icon">🎯</span>
                             <div>
                                 <div class="text-xs md:text-sm text-slate-300">LeadTarget</div>
-                                <div class="text-xs
+                                <div class="text-xs text-slate-500" id="syncLeadTarget">Listo</div>
+                            </div>
+                        </div>
+                        <div class="sync-item">
+                            <span class="sync-icon">💰</span>
+                            <div>
+                                <div class="text-xs md:text-sm text-slate-300">Liquidez</div>
+                                <div class="text-xs text-slate-500" id="syncLiquidez">Listo</div>
+                            </div>
+                        </div>
+                        <div class="sync-item">
+                            <span class="sync-icon">🛡️</span>
+                            <div>
+                                <div class="text-xs md:text-sm text-slate-300">Wealth</div>
+                                <div class="text-xs text-slate-500" id="syncWealth">Listo</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Break-even Chart -->
+                <section class="obsidian-card p-4 md:p-6 slide-in">
+                    <h2 class="section-title mb-4">
+                        <span class="text-xl md:text-2xl mr-2">📊</span> Break-Even
+                    </h2>
+                    <div class="chart-container">
+                        <canvas id="chartBreakeven" height="100"></canvas>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <div class="text-xs md:text-sm text-slate-400">Unidades Break-Even</div>
+                        <div class="text-2xl md:text-3xl font-bold text-cyan-400" id="unidadesBreakeven">0</div>
+                    </div>
+                </section>
+
+                <!-- Export & Actions -->
+                <section class="obsidian-card p-4 md:p-6 slide-in">
+                    <h2 class="section-title mb-4">
+                        <span class="text-xl md:text-2xl mr-2">💾</span> Acciones
+                    </h2>
+                    <div class="grid grid-cols-2 gap-3 md:gap-4">
+                        <button onclick="guardarProducto()" class="btn-action bg-gradient-to-r from-green-600 to-emerald-600">
+                            <span class="text-xl md:text-2xl">💾</span>
+                            <span class="text-xs md:text-sm">Guardar</span>
+                        </button>
+                        <button onclick="exportarPDF()" class="btn-action bg-gradient-to-r from-red-600 to-pink-600">
+                            <span class="text-xl md:text-2xl">📄</span>
+                            <span class="text-xs md:text-sm">PDF Report</span>
+                        </button>
+                        <button onclick="exportarCSV()" class="btn-action bg-gradient-to-r from-blue-600 to-cyan-600">
+                            <span class="text-xl md:text-2xl">📊</span>
+                            <span class="text-xs md:text-sm">Export CSV</span>
+                        </button>
+                        <button onclick="compartirResultados()" class="btn-action bg-gradient-to-r from-purple-600 to-indigo-600">
+                            <span class="text-xl md:text-2xl">🔗</span>
+                            <span class="text-xs md:text-sm">Compartir</span>
+                        </button>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="max-w-7xl mx-auto px-4 py-6 md:py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div>
+                    <h3 class="text-white font-bold mb-2">MarginAxis Global</h3>
+                    <p class="text-slate-400 text-sm">Enterprise Profit Intelligence Platform</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-2 text-sm">Pentágono Financiero</h4>
+                    <div class="space-y-1">
+                        <a href="https://sueldopro-2026.vercel.app" target="_blank" class="footer-link">SueldoPro Ultra</a>
+                        <a href="https://liquidez-force.vercel.app" target="_blank" class="footer-link">Liquidez Force</a>
+                        <a href="https://lead-target-rpvx.vercel.app" target="_blank" class="footer-link">Lead Target</a>
+                        <a href="https://wealth-armor-ai.vercel.app" target="_blank" class="footer-link">Wealth Armor AI</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-2 text-sm">Legal</h4>
+                    <p class="text-slate-500 text-xs">MarginAxis Global es una plataforma de simulación financiera. Los cálculos son estimaciones basadas en variables de mercado y leyes locales 2026. No sustituye la asesoría contable oficial.</p>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-4 text-center text-slate-500 text-xs md:text-sm">
+                <p>© 2026 MarginAxis Global • Golden Commerce Ecosystem v3.0</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>="sync-icon">💼</span>
+                            <div>
+                                <div class="text-xs md:text-sm text-slate-300">SueldoPro</div>
+                                <div class="text-xs text-slate-500" id="syncSueldoPro">Listo</div>
+                            </div>
+                        </div>
+                        <div class="sync-item">
+                            <span class

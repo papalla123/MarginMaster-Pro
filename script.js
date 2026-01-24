@@ -22,30 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
     calcular();
     verificarConexionesPentagon();
     
-    console.log('✔ MarginAxis Global ready');
+    console.log('✓ MarginAxis Global ready');
 });
-
-// ===== PENTAGON INTEGRATION - FIXED =====
-async function verificarConexionesPentagon() {
-    const links = window.PENTAGON_LINKS;
-    
-    // Update navigation links with .url property
-    document.getElementById('linkSueldoPro').href = links.sueldopro.url;
-    document.getElementById('linkLiquidez').href = links.liquidez.url;
-    document.getElementById('linkLeadTarget').href = links.leadtarget.url;
-    document.getElementById('linkWealth').href = links.wealth.url;
-    
-    // Update sync status
-    document.getElementById('syncLeadTarget').textContent = '✓ Conectado';
-    document.getElementById('syncLiquidez').textContent = '✓ Conectado';
-    document.getElementById('syncWealth').textContent = '✓ Conectado';
-    
-    console.log('⬡ Pentagon Links verificados:');
-    console.log('  - SueldoPro:', links.sueldopro.url);
-    console.log('  - Liquidez:', links.liquidez.url);
-    console.log('  - LeadTarget:', links.leadtarget.url);
-    console.log('  - Wealth:', links.wealth.url);
-}
 
 // ===== EVENT CONFIGURATION =====
 function configurarEventos() {
@@ -612,7 +590,7 @@ Producto: ${document.getElementById('nombreProducto').value}
 Margen Neto: ${document.getElementById('margenNeto').textContent}
 Ganancia: ${document.getElementById('gananciaNeta').textContent}
 
-🚀 Analiza tu rentabilidad en margin-master-pro-pboy.vercel.app`;
+🚀 Analiza tu rentabilidad en margin-master-pro.vercel.app`;
     
     if (navigator.share) {
         navigator.share({
@@ -645,6 +623,21 @@ function guardarProducto() {
     localStorage.setItem(STORAGE_KEYS.productos, JSON.stringify(productos));
     
     mostrarNotificacion('Producto guardado correctamente', 'success');
+}
+
+// ===== PENTAGON INTEGRATION =====
+async function verificarConexionesPentagon() {
+    const links = window.PENTAGON_LINKS;
+    
+    document.getElementById('linkSueldoPro').href = links.sueldopro;
+    document.getElementById('linkLiquidez').href = links.liquidez;
+    document.getElementById('linkLeadTarget').href = links.leadtarget;
+    document.getElementById('linkWealth').href = links.wealth;
+    
+    document.getElementById('syncSueldoPro').textContent = 'Listo';
+    document.getElementById('syncLeadTarget').textContent = 'Listo';
+    document.getElementById('syncLiquidez').textContent = 'Listo';
+    document.getElementById('syncWealth').textContent = 'Listo';
 }
 
 // ===== SIMULATOR FUNCTIONS =====
@@ -726,7 +719,7 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-console.log('✔ MarginAxis Global Engine v3.0 loaded');
+console.log('✓ MarginAxis Global Engine v3.0 loaded');
 console.log('🌍 21-country system active');
 console.log('💱 Real-time Forex enabled');
 console.log('🔥 Stress Testing ready');
