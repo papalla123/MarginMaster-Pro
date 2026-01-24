@@ -9,7 +9,7 @@ window.PENTAGON_LINKS = {
     marginaxis: 'https://marginaxis-global.vercel.app',
     sueldopro: 'https://sueldopro-2026.vercel.app',
     liquidez: 'https://liquidez-force.vercel.app',
-    leadtarget: 'https://lead-target-rpvx.vercel.app',
+    leadnexus: 'https://lead-target.vercel.app',
     wealth: 'https://wealth-armor-ai.vercel.app'
 };
 
