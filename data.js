@@ -1,447 +1,438 @@
 /* ========================================
-   MARGINAXIS GLOBAL - DATABASE ENGINE
-   21 Países • Multi-Currency • Pentagon Bridge
-   Enterprise Intelligence v3.0
+   MARGINAXIS PERÚ 2026 - MOTOR TRIBUTARIO
+   Sistema SUNAT Completo • UIT 2026 • Bridge SueldoPro
+   Enterprise Intelligence Perú v1.0
    ======================================== */
 
-// ===== PENTAGON LINKS (Centralized Navigation) =====
+// ===== PENTAGON LINKS (Ecosystem Integration) =====
 window.PENTAGON_LINKS = {
-    marginaxis: 'https://marginaxis-global.vercel.app',
+    marginaxis: 'https://marginaxis-peru-2026.vercel.app',
     sueldopro: 'https://sueldopro-2026.vercel.app',
     liquidez: 'https://liquidez-force.vercel.app',
     leadnexus: 'https://lead-target.vercel.app',
     wealth: 'https://wealth-armor-ai.vercel.app'
 };
 
-// ===== GLOBAL COUNTRY CONFIGURATION (21 Countries) =====
-const PAISES = {
-    ES: {
-        nombre: 'España',
-        moneda: 'EUR',
-        simbolo: '€',
-        iva: 0.21,
-        nombreIVA: 'IVA',
-        regimenes: {
-            autonomo: { nombre: 'Autónomo', tasaRenta: 0.15, aplicaIVA: true },
-            sl: { nombre: 'Sociedad Limitada', tasaRenta: 0.25, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' },
-            bizum: { nombre: 'Bizum', comision: 0.005, fijo: 0, aplicaIVA: false, icono: '📱' },
-            redsys: { nombre: 'Redsys', comision: 0.0175, fijo: 0.25, aplicaIVA: true, icono: '💳' },
-            stripe: { nombre: 'Stripe', comision: 0.014, fijo: 0.25, aplicaIVA: true, icono: '💳' },
-            paypal: { nombre: 'PayPal', comision: 0.034, fijo: 0.35, aplicaIVA: true, icono: '💳' }
-        }
+// ===== CONSTANTES TRIBUTARIAS PERÚ 2026 =====
+const PERU_2026 = {
+    UIT: 5150,
+    IGV: 0.18,
+    percepcion: 0.01,
+    detracciones: {
+        'servicios': 0.12,
+        'bienes': 0.10,
+        'transporte': 0.04
     },
-    PE: {
-        nombre: 'Perú',
-        moneda: 'PEN',
-        simbolo: 'S/',
-        iva: 0.18,
-        nombreIVA: 'IGV',
-        regimenes: {
-            rus: { nombre: 'Nuevo RUS', tasaRenta: 0.015, aplicaIVA: false },
-            rer: { nombre: 'RER', tasaRenta: 0.015, aplicaIVA: true },
-            mype: { nombre: 'MYPE', tasaRenta: 0.10, aplicaIVA: true },
-            general: { nombre: 'Régimen General', tasaRenta: 0.295, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' },
-            yape: { nombre: 'Yape Personal', comision: 0, fijo: 0, aplicaIVA: false, icono: '📱' },
-            'yape-empresa': { nombre: 'Yape Empresa', comision: 0.0295, fijo: 0, aplicaIVA: false, icono: '📱' },
-            plin: { nombre: 'Plin', comision: 0.0295, fijo: 0, aplicaIVA: false, icono: '📱' },
-            niubiz: { nombre: 'Niubiz', comision: 0.0344, fijo: 0, aplicaIVA: true, icono: '💳' },
-            culqi: { nombre: 'Culqi', comision: 0.0399, fijo: 1.00, aplicaIVA: true, icono: '💳' }
-        }
+    salarioMinimo: 1025,
+    gratificaciones: 2,
+    cts: true,
+    essalud: 0.09,
+    senati: 0.0075,
+    sctr: 0.0125
+};
+
+// ===== REGÍMENES TRIBUTARIOS SUNAT 2026 =====
+const REGIMENES_SUNAT = {
+    nrus: {
+        nombre: 'Nuevo RUS (NRUS)',
+        descripcion: 'Nuevo Régimen Único Simplificado',
+        categorias: [
+            { limite: 5000, cuota: 20, descripcion: 'Categoría 1' },
+            { limite: 8000, cuota: 50, descripcion: 'Categoría 2' }
+        ],
+        aplicaIGV: false,
+        aplicaRenta: false,
+        ventajas: ['Cuota fija mensual', 'No lleva libros contables', 'Sin declaraciones mensuales'],
+        restricciones: ['Máximo S/ 96,000 al año', 'No emite facturas electrónicas', 'Solo boletas']
     },
-    MX: {
-        nombre: 'México',
-        moneda: 'MXN',
-        simbolo: '$',
-        iva: 0.16,
-        nombreIVA: 'IVA',
-        regimenes: {
-            resico: { nombre: 'RESICO', tasaRenta: 0.01, aplicaIVA: true },
-            simplificado: { nombre: 'Simplificado de Confianza', tasaRenta: 0.025, aplicaIVA: true },
-            general: { nombre: 'Régimen General', tasaRenta: 0.30, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' },
-            oxxo: { nombre: 'OXXO Pay', comision: 0.035, fijo: 8, aplicaIVA: true, icono: '🏪' },
-            conekta: { nombre: 'Conekta', comision: 0.036, fijo: 3, aplicaIVA: true, icono: '💳' },
-            stripe: { nombre: 'Stripe', comision: 0.036, fijo: 3, aplicaIVA: true, icono: '💳' },
-            mercadopago: { nombre: 'Mercado Pago', comision: 0.0399, fijo: 4, aplicaIVA: true, icono: '💳' }
-        }
+    rer: {
+        nombre: 'RER',
+        descripcion: 'Régimen Especial de Renta',
+        tasaRenta: 0.015,
+        aplicaIGV: true,
+        ventajas: ['Tasa única 1.5%', 'Libros simplificados'],
+        restricciones: ['Máximo S/ 525,000 al año', 'Máximo 10 trabajadores']
     },
-    CO: {
-        nombre: 'Colombia',
-        moneda: 'COP',
-        simbolo: '$',
-        iva: 0.19,
-        nombreIVA: 'IVA',
-        regimenes: {
-            simple: { nombre: 'Régimen Simple', tasaRenta: 0.02, aplicaIVA: false },
-            ordinario: { nombre: 'Régimen Ordinario', tasaRenta: 0.35, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' },
-            nequi: { nombre: 'Nequi', comision: 0.02, fijo: 0, aplicaIVA: false, icono: '📱' },
-            bold: { nombre: 'Bold', comision: 0.0299, fijo: 0, aplicaIVA: true, icono: '💳' },
-            wompi: { nombre: 'Wompi', comision: 0.0349, fijo: 900, aplicaIVA: true, icono: '💳' }
-        }
+    mype: {
+        nombre: 'MYPE Tributario',
+        descripcion: 'Régimen para Micro y Pequeña Empresa',
+        tramos: [
+            { hasta: 15, tasa: 0.10, descripcion: 'Hasta 15 UIT' },
+            { desde: 15.01, tasa: 0.295, descripcion: 'Más de 15 UIT' }
+        ],
+        aplicaIGV: true,
+        ventajas: ['Tasa progresiva', 'Depreciacipon acelerada'],
+        restricciones: ['Máximo 1700 UIT de ingresos']
     },
-    CL: {
-        nombre: 'Chile',
-        moneda: 'CLP',
-        simbolo: '$',
-        iva: 0.19,
-        nombreIVA: 'IVA',
-        regimenes: {
-            pro_pyme: { nombre: 'Pro Pyme', tasaRenta: 0.25, aplicaIVA: true },
-            general: { nombre: 'Régimen General', tasaRenta: 0.27, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' },
-            khipu: { nombre: 'Khipu', comision: 0.029, fijo: 0, aplicaIVA: true, icono: '💳' },
-            webpay: { nombre: 'Webpay Plus', comision: 0.0349, fijo: 0, aplicaIVA: true, icono: '💳' }
-        }
-    },
-    AR: {
-        nombre: 'Argentina',
-        moneda: 'ARS',
-        simbolo: '$',
-        iva: 0.21,
-        nombreIVA: 'IVA',
-        regimenes: {
-            monotributo: { nombre: 'Monotributo', tasaRenta: 0.01, aplicaIVA: false },
-            responsable: { nombre: 'Responsable Inscripto', tasaRenta: 0.35, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' },
-            mercadopago: { nombre: 'Mercado Pago', comision: 0.0399, fijo: 5, aplicaIVA: true, icono: '💳' }
-        }
-    },
-    BR: {
-        nombre: 'Brasil',
-        moneda: 'BRL',
-        simbolo: 'R$',
-        iva: 0.17,
-        nombreIVA: 'ICMS',
-        regimenes: {
-            simples: { nombre: 'Simples Nacional', tasaRenta: 0.06, aplicaIVA: true },
-            lucro_real: { nombre: 'Lucro Real', tasaRenta: 0.34, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Dinheiro', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' },
-            pix: { nombre: 'PIX', comision: 0.01, fijo: 0, aplicaIVA: false, icono: '📱' }
-        }
-    },
-    UY: {
-        nombre: 'Uruguay',
-        moneda: 'UYU',
-        simbolo: '$U',
-        iva: 0.22,
-        nombreIVA: 'IVA',
-        regimenes: {
-            general: { nombre: 'IRAE', tasaRenta: 0.25, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
-    },
-    PY: {
-        nombre: 'Paraguay',
-        moneda: 'PYG',
-        simbolo: '₲',
-        iva: 0.10,
-        nombreIVA: 'IVA',
-        regimenes: {
-            general: { nombre: 'IRE', tasaRenta: 0.10, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
-    },
-    BO: {
-        nombre: 'Bolivia',
-        moneda: 'BOB',
-        simbolo: 'Bs',
-        iva: 0.13,
-        nombreIVA: 'IVA',
-        regimenes: {
-            general: { nombre: 'IUE', tasaRenta: 0.25, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
-    },
-    EC: {
-        nombre: 'Ecuador',
-        moneda: 'USD',
-        simbolo: '$',
-        iva: 0.15,
-        nombreIVA: 'IVA',
-        regimenes: {
-            general: { nombre: 'Régimen General', tasaRenta: 0.25, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
-    },
-    VE: {
-        nombre: 'Venezuela',
-        moneda: 'VES',
-        simbolo: 'Bs.S',
-        iva: 0.16,
-        nombreIVA: 'IVA',
-        regimenes: {
-            general: { nombre: 'ISLR', tasaRenta: 0.34, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
-    },
-    CR: {
-        nombre: 'Costa Rica',
-        moneda: 'CRC',
-        simbolo: '₡',
-        iva: 0.13,
-        nombreIVA: 'IVA',
-        regimenes: {
-            general: { nombre: 'Régimen General', tasaRenta: 0.30, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
-    },
-    PA: {
-        nombre: 'Panamá',
-        moneda: 'PAB',
-        simbolo: 'B/.',
-        iva: 0.07,
-        nombreIVA: 'ITBMS',
-        regimenes: {
-            general: { nombre: 'ISR', tasaRenta: 0.25, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
-    },
-    GT: {
-        nombre: 'Guatemala',
-        moneda: 'GTQ',
-        simbolo: 'Q',
-        iva: 0.12,
-        nombreIVA: 'IVA',
-        regimenes: {
-            general: { nombre: 'ISR', tasaRenta: 0.25, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
-    },
-    SV: {
-        nombre: 'El Salvador',
-        moneda: 'USD',
-        simbolo: '$',
-        iva: 0.13,
-        nombreIVA: 'IVA',
-        regimenes: {
-            general: { nombre: 'ISR', tasaRenta: 0.30, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' },
-            chivo: { nombre: 'Chivo Wallet', comision: 0, fijo: 0, aplicaIVA: false, icono: '₿' }
-        }
-    },
-    HN: {
-        nombre: 'Honduras',
-        moneda: 'HNL',
-        simbolo: 'L',
-        iva: 0.15,
-        nombreIVA: 'ISV',
-        regimenes: {
-            general: { nombre: 'ISR', tasaRenta: 0.25, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
-    },
-    NI: {
-        nombre: 'Nicaragua',
-        moneda: 'NIO',
-        simbolo: 'C$',
-        iva: 0.15,
-        nombreIVA: 'IVA',
-        regimenes: {
-            general: { nombre: 'IR', tasaRenta: 0.30, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
-    },
-    DO: {
-        nombre: 'República Dominicana',
-        moneda: 'DOP',
-        simbolo: 'RD$',
-        iva: 0.18,
-        nombreIVA: 'ITBIS',
-        regimenes: {
-            general: { nombre: 'ISR', tasaRenta: 0.27, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
-    },
-    CU: {
-        nombre: 'Cuba',
-        moneda: 'CUP',
-        simbolo: '$',
-        iva: 0.00,
-        nombreIVA: 'N/A',
-        regimenes: {
-            general: { nombre: 'Impuesto sobre Utilidades', tasaRenta: 0.35, aplicaIVA: false }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Efectivo', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
-    },
-    PR: {
-        nombre: 'Puerto Rico',
-        moneda: 'USD',
-        simbolo: '$',
-        iva: 0.115,
-        nombreIVA: 'IVU',
-        regimenes: {
-            general: { nombre: 'Corporate Tax', tasaRenta: 0.37, aplicaIVA: true }
-        },
-        pasarelas: {
-            efectivo: { nombre: 'Cash', comision: 0, fijo: 0, aplicaIVA: false, icono: '💵' }
-        }
+    general: {
+        nombre: 'Régimen General',
+        descripcion: 'Régimen General del Impuesto a la Renta',
+        tasaRenta: 0.295,
+        aplicaIGV: true,
+        ventajas: ['Sin límite de ingresos', 'Todos los beneficios tributarios'],
+        restricciones: ['Contabilidad completa', 'Mayor carga administrativa']
     }
 };
 
-// ===== HARMONIZED SYSTEM CODES (Sample Customs Data) =====
-const ARANCELES = {
-    '8471.30.00.00': { descripcion: 'Computadoras portátiles', adValorem: 0.00 },
-    '0901.21.00.00': { descripcion: 'Café tostado sin descafeinar', adValorem: 0.11 },
-    '6109.10.00.31': { descripcion: 'T-shirts de algodón', adValorem: 0.11 },
-    '8517.62.00.00': { descripcion: 'Máquinas receptoras para telefonía', adValorem: 0.00 },
-    '1905.90.00.00': { descripcion: 'Productos de panadería', adValorem: 0.09 }
+// ===== PASARELAS DE PAGO PERÚ 2026 =====
+const PASARELAS_PERU = {
+    efectivo: {
+        nombre: 'Efectivo',
+        icono: '💵',
+        comision: 0,
+        fijo: 0,
+        aplicaIGV: false,
+        retencion: 0,
+        ventajas: ['Sin comisión', 'Inmediato'],
+        desventajas: ['Manejo de caja', 'Riesgo de robo']
+    },
+    yape_personal: {
+        nombre: 'Yape Personal',
+        icono: '💜',
+        comision: 0,
+        fijo: 0,
+        aplicaIGV: false,
+        retencion: 0,
+        limite: 500,
+        ventajas: ['Gratis', 'Instantáneo', 'Popular'],
+        desventajas: ['Límite S/ 500 por operación', 'Sin comprobante automático']
+    },
+    yape_negocio: {
+        nombre: 'Yape para Negocios',
+        icono: '💜',
+        comision: 0.0295,
+        fijo: 0,
+        aplicaIGV: false,
+        retencion: 0,
+        ventajas: ['Comprobante automático', 'Panel de control'],
+        desventajas: ['Comisión 2.95%']
+    },
+    plin: {
+        nombre: 'Plin',
+        icono: '💚',
+        comision: 0.029,
+        fijo: 0,
+        aplicaIGV: false,
+        retencion: 0,
+        ventajas: ['Sin límite diario', 'Múltiples bancos'],
+        desventajas: ['Comisión 2.9%']
+    },
+    tunki: {
+        nombre: 'Tunki',
+        icono: '🦙',
+        comision: 0.025,
+        fijo: 0,
+        aplicaIGV: false,
+        retencion: 0,
+        ventajas: ['Comisión baja', 'Del BCP'],
+        desventajas: ['Menor adopción']
+    },
+    niubiz: {
+        nombre: 'Niubiz (Visa/MC)',
+        icono: '💳',
+        comision: 0.0344,
+        fijo: 0,
+        aplicaIGV: true,
+        retencion: 0.03,
+        ventajas: ['Más aceptada', 'Profesional'],
+        desventajas: ['Comisión + IGV + Retención']
+    },
+    izipay: {
+        nombre: 'Izipay',
+        icono: '💳',
+        comision: 0.0375,
+        fijo: 0.50,
+        aplicaIGV: true,
+        retencion: 0.03,
+        ventajas: ['Checkout simple', 'Link de pago'],
+        desventajas: ['Comisión alta']
+    },
+    culqi: {
+        nombre: 'Culqi',
+        icono: '💳',
+        comision: 0.0399,
+        fijo: 1.00,
+        aplicaIGV: true,
+        retencion: 0.03,
+        ventajas: ['Integración fácil', 'Soporte local'],
+        desventajas: ['Comisión + cuota fija']
+    },
+    mercadopago: {
+        nombre: 'Mercado Pago',
+        icono: '💳',
+        comision: 0.0499,
+        fijo: 0,
+        aplicaIGV: true,
+        retencion: 0.03,
+        ventajas: ['Ecosistema completo', 'QR'],
+        desventajas: ['Comisión más alta']
+    },
+    paypal: {
+        nombre: 'PayPal',
+        icono: '💙',
+        comision: 0.055,
+        fijo: 2.50,
+        aplicaIGV: true,
+        retencion: 0,
+        ventajas: ['Internacional', 'Protección comprador'],
+        desventajas: ['Comisión muy alta', 'Tipo de cambio desfavorable']
+    }
 };
 
-// ===== FOREX API CONFIGURATION =====
-const FOREX_API = {
+// ===== COSTOS LABORALES PERÚ (Bridge con SueldoPro) =====
+const COSTOS_LABORALES_PERU = {
+    general: {
+        nombre: 'Régimen General',
+        essalud: 0.09,
+        senati: 0.0075,
+        sctr: 0.0125,
+        gratificaciones: 2,
+        cts: true,
+        vacaciones: true,
+        descripcion: 'Régimen laboral estándar',
+        costoTotal: 1.6645
+    },
+    pequenia: {
+        nombre: 'Pequeña Empresa (20-100 trab.)',
+        essalud: 0.09,
+        senati: 0,
+        sctr: 0,
+        gratificaciones: 2,
+        cts: true,
+        vacaciones: true,
+        descripcion: 'Beneficios reducidos',
+        costoTotal: 1.5833
+    },
+    micro: {
+        nombre: 'Microempresa (1-10 trab.)',
+        essalud: 0.09,
+        senati: 0,
+        sctr: 0,
+        gratificaciones: 0,
+        cts: false,
+        vacaciones: true,
+        descripcion: 'Solo Essalud + vacaciones',
+        costoTotal: 1.1733
+    }
+};
+
+// ===== CÓDIGOS HS PERÚ (Aduanas) =====
+const ARANCELES_PERU = {
+    '8471.30.00.00': { descripcion: 'Laptops y notebooks', adValorem: 0.00, igv: true },
+    '8517.12.00.00': { descripcion: 'Smartphones', adValorem: 0.00, igv: true },
+    '0901.21.00.00': { descripcion: 'Café tostado', adValorem: 0.11, igv: true },
+    '6109.10.00.31': { descripcion: 'Polos de algodón', adValorem: 0.11, igv: true },
+    '6204.62.00.00': { descripcion: 'Pantalones de algodón para mujer', adValorem: 0.11, igv: true },
+    '1905.90.00.00': { descripcion: 'Productos de panadería', adValorem: 0.09, igv: true },
+    '3304.10.00.00': { descripcion: 'Preparaciones de belleza', adValorem: 0.11, igv: true },
+    '8528.72.10.00': { descripcion: 'Televisores LCD', adValorem: 0.09, igv: true },
+    '9403.60.00.00': { descripcion: 'Muebles de madera', adValorem: 0.09, igv: true },
+    '6403.99.00.00': { descripcion: 'Calzado de cuero', adValorem: 0.11, igv: true }
+};
+
+// ===== FOREX PERÚ =====
+const FOREX_PERU = {
     endpoint: 'https://api.exchangerate-api.com/v4/latest/USD',
-    backup: 'https://api.frankfurter.app/latest?from=USD',
-    defaultRates: {
-        ES: 0.92,  // EUR
-        PE: 3.75,  // PEN
-        MX: 17.50, // MXN
-        CO: 4200,  // COP
-        CL: 920,   // CLP
-        AR: 850,   // ARS
-        BR: 4.95,  // BRL
-        UY: 39.5,  // UYU
-        PY: 7300,  // PYG
-        BO: 6.91,  // BOB
-        EC: 1.00,  // USD
-        VE: 36.5,  // VES
-        CR: 520,   // CRC
-        PA: 1.00,  // PAB
-        GT: 7.80,  // GTQ
-        SV: 1.00,  // USD
-        HN: 24.7,  // HNL
-        NI: 36.8,  // NIO
-        DO: 59.5,  // DOP
-        CU: 24.0,  // CUP
-        PR: 1.00   // USD
+    backup: 'https://api.apis.net.pe/v1/tipo-cambio-sunat',
+    moneda: 'PEN',
+    simbolo: 'S/',
+    defaultRate: 3.75,
+    factorConversion: {
+        USD: 1,
+        EUR: 0.92
     }
 };
 
-// ===== PROFITABILITY TRAFFIC LIGHT =====
-const TRAFFIC_LIGHT = {
-    red: {
-        max: 15,
-        icon: '🔴',
-        message: '¡Alerta! Rentabilidad crítica',
+// ===== SEMÁFORO DE RENTABILIDAD PERÚ =====
+const SEMAFORO_RENTABILIDAD = {
+    rojo: {
+        max: 10,
+        icono: '🔴',
+        mensaje: '¡CRISIS! Estás perdiendo plata',
+        recomendacion: 'Urgente: Revisar precios o reducir costos',
         color: '#dc2626',
         class: 'traffic-light-red'
     },
-    yellow: {
-        max: 30,
-        icon: '🟡',
-        message: 'Rentabilidad moderada - Puede mejorar',
+    amarillo: {
+        max: 25,
+        icono: '🟡',
+        mensaje: 'SUPERVIVENCIA - Apenas cubres gastos',
+        recomendacion: 'Optimiza tu estructura de costos',
         color: '#f59e0b',
         class: 'traffic-light-yellow'
     },
-    green: {
+    verde: {
         max: Infinity,
-        icon: '🟢',
-        message: '¡Excelente! Rentabilidad óptima',
+        icono: '🟢',
+        mensaje: '¡RENTABLE! Tu negocio es sostenible',
+        recomendacion: 'Sigue así y busca escalar',
         color: '#10b981',
         class: 'traffic-light-green'
     }
 };
 
-// ===== BUSINESS CONSTANTS =====
-const CALCULOS = {
-    diasLaborablesMes: 26,
-    horasDiarias: 8,
-    semanasMes: 4.33,
-    mesesAnio: 12
+// ===== BENCHMARKS PERÚ POR INDUSTRIA =====
+const BENCHMARKS_PERU = {
+    retail: { margenBruto: 40, margenNeto: 8, nombre: 'Retail/Tiendas' },
+    restaurante: { margenBruto: 65, margenNeto: 10, nombre: 'Restaurantes' },
+    tecnologia: { margenBruto: 70, margenNeto: 20, nombre: 'Tecnología/SaaS' },
+    manufactura: { margenBruto: 35, margenNeto: 12, nombre: 'Manufactura' },
+    servicios: { margenBruto: 60, margenNeto: 15, nombre: 'Servicios' },
+    ecommerce: { margenBruto: 45, margenNeto: 5, nombre: 'E-commerce' },
+    belleza: { margenBruto: 55, margenNeto: 12, nombre: 'Belleza/Spa' },
+    educacion: { margenBruto: 70, margenNeto: 18, nombre: 'Educación' },
+    construccion: { margenBruto: 30, margenNeto: 8, nombre: 'Construcción' },
+    consultoria: { margenBruto: 75, margenNeto: 25, nombre: 'Consultoría' }
 };
 
 // ===== STORAGE KEYS =====
 const STORAGE_KEYS = {
-    paisActual: 'marginaxis_pais',
-    productos: 'marginaxis_productos',
-    forexCache: 'marginaxis_forex_cache'
+    productos: 'marginaxis_peru_productos',
+    configuracion: 'marginaxis_peru_config',
+    forexCache: 'marginaxis_peru_forex',
+    ultimoRegimen: 'marginaxis_peru_regimen'
+};
+
+// ===== CONSTANTES DE CÁLCULO =====
+const CONSTANTES = {
+    diasMes: 30,
+    diasLaborables: 26,
+    horasDia: 8,
+    mesesAnio: 12,
+    semanasAnio: 52
 };
 
 // ===== HELPER FUNCTIONS =====
 
-// Get current country
-function getPaisActual() {
-    return localStorage.getItem(STORAGE_KEYS.paisActual) || 'PE';
+// Calcular cuota NRUS según ventas mensuales
+function calcularNRUS(ventasMensuales) {
+    if (ventasMensuales <= 5000) {
+        return { cuota: 20, categoria: 1 };
+    } else if (ventasMensuales <= 8000) {
+        return { cuota: 50, categoria: 2 };
+    } else {
+        return { cuota: null, mensaje: 'Excede límite NRUS' };
+    }
 }
 
-// Get country configuration
-function getConfigPais(codigoPais) {
-    return PAISES[codigoPais] || PAISES.PE;
-}
-
-// Format currency by country
-function formatearMonedaPais(valor, codigoPais) {
-    const config = getConfigPais(codigoPais);
-    const decimals = ['CLP', 'COP', 'PYG', 'CUP'].includes(config.moneda) ? 0 : 2;
+// Calcular impuesto MYPE Tributario
+function calcularMYPE(utilidadAnual) {
+    const limite15UIT = 15 * PERU_2026.UIT;
     
-    return new Intl.NumberFormat('es', {
-        style: 'currency',
-        currency: config.moneda,
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals
-    }).format(valor);
+    if (utilidadAnual <= limite15UIT) {
+        return utilidadAnual * 0.10;
+    } else {
+        const tramo1 = limite15UIT * 0.10;
+        const tramo2 = (utilidadAnual - limite15UIT) * 0.295;
+        return tramo1 + tramo2;
+    }
 }
 
-// Convert to USD
-function convertirAUSD(valor, paisCodigo, forexRates) {
-    const config = getConfigPais(paisCodigo);
-    if (config.moneda === 'USD') return valor;
+// Calcular IGV sobre comisión de pasarela
+function calcularIGVComision(comision, aplicaIGV) {
+    return aplicaIGV ? comision * PERU_2026.IGV : 0;
+}
+
+// Calcular retención (3% para tarjetas)
+function calcularRetencion(monto, pasarela) {
+    const pasarelaData = PASARELAS_PERU[pasarela];
+    return pasarelaData.retencion ? monto * pasarelaData.retencion : 0;
+}
+
+// Formatear moneda peruana
+function formatearSoles(valor, incluirSimbolo = true) {
+    const formato = new Intl.NumberFormat('es-PE', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(Math.abs(valor));
     
-    const rate = forexRates[config.moneda] || FOREX_API.defaultRates[paisCodigo];
-    return valor / rate;
+    return incluirSimbolo ? `S/ ${formato}` : formato;
 }
 
-// Convert to EUR
-function convertirAEUR(valor, paisCodigo, forexRates) {
-    const valorUSD = convertirAUSD(valor, paisCodigo, forexRates);
-    const eurRate = forexRates['EUR'] || FOREX_API.defaultRates.ES;
-    return valorUSD * eurRate;
+// Formatear porcentaje
+function formatearPorcentaje(valor, decimales = 2) {
+    return `${valor.toFixed(decimales)}%`;
 }
 
-console.log('✓ MarginAxis Global Database v3.0 loaded');
-console.log('🌍 Countries configured:', Object.keys(PAISES).length);
-console.log('⬡ Pentagon Bridge initialized');
-console.log('🔥 Stress Testing ready');
-console.log('📊 Advanced analytics enabled');
+// Convertir PEN a USD
+function convertirPENaUSD(soles, tipoCambio = FOREX_PERU.defaultRate) {
+    return soles / tipoCambio;
+}
+
+// Convertir PEN a EUR
+function convertirPENaEUR(soles, tipoCambio = FOREX_PERU.defaultRate) {
+    const usd = convertirPENaUSD(soles, tipoCambio);
+    return usd * FOREX_PERU.factorConversion.EUR;
+}
+
+// Obtener régimen recomendado según ingresos anuales
+function obtenerRegimenRecomendado(ingresosAnuales) {
+    const uitValor = PERU_2026.UIT;
+    
+    if (ingresosAnuales <= 96000) {
+        return {
+            codigo: 'nrus',
+            nombre: 'NRUS',
+            razon: 'Cuota fija, ideal para emprender'
+        };
+    } else if (ingresosAnuales <= 525000) {
+        return {
+            codigo: 'rer',
+            nombre: 'RER',
+            razon: 'Tasa baja del 1.5% sobre ingresos'
+        };
+    } else if (ingresosAnuales <= (uitValor * 1700)) {
+        return {
+            codigo: 'mype',
+            nombre: 'MYPE Tributario',
+            razon: 'Tasa progresiva, beneficios fiscales'
+        };
+    } else {
+        return {
+            codigo: 'general',
+            nombre: 'Régimen General',
+            razon: 'Sin límites, todos los beneficios'
+        };
+    }
+}
+
+// Calcular costo laboral total mensual
+function calcularCostoLaboral(sueldoBase, regimenLaboral = 'general') {
+    const regimen = COSTOS_LABORALES_PERU[regimenLaboral];
+    return sueldoBase * regimen.costoTotal;
+}
+
+// Determinar semáforo de rentabilidad
+function determinarSemaforo(margenNetoPercent) {
+    if (margenNetoPercent < SEMAFORO_RENTABILIDAD.rojo.max) {
+        return SEMAFORO_RENTABILIDAD.rojo;
+    } else if (margenNetoPercent < SEMAFORO_RENTABILIDAD.amarillo.max) {
+        return SEMAFORO_RENTABILIDAD.amarillo;
+    } else {
+        return SEMAFORO_RENTABILIDAD.verde;
+    }
+}
+
+// Comparar con benchmark de industria
+function compararConBenchmark(margenNeto, industria) {
+    const benchmark = BENCHMARKS_PERU[industria];
+    if (!benchmark) return null;
+    
+    const diferencia = margenNeto - benchmark.margenNeto;
+    return {
+        benchmark: benchmark.margenNeto,
+        diferencia: diferencia,
+        mejor: diferencia >= 0,
+        mensaje: diferencia >= 0 
+            ? `¡Superas el benchmark de ${benchmark.nombre} por ${diferencia.toFixed(1)}%!`
+            : `Estás ${Math.abs(diferencia).toFixed(1)}% por debajo del benchmark de ${benchmark.nombre}`
+    };
+}
+
+console.log('✓ MarginAxis Perú 2026 - Motor Tributario Cargado');
+console.log('🇵🇪 Sistema SUNAT Completo Activo');
+console.log(`💰 UIT 2026: S/ ${PERU_2026.UIT}`);
+console.log(`📊 IGV: ${(PERU_2026.IGV * 100)}%`);
+console.log(`⬡ Pentagon Bridge Conectado`);
+console.log(`🔥 ${Object.keys(REGIMENES_SUNAT).length} Regímenes SUNAT Disponibles`);
+console.log(`💳 ${Object.keys(PASARELAS_PERU).length} Pasarelas de Pago Configuradas`);
